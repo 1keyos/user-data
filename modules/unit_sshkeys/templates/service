@@ -1,0 +1,10 @@
+[Unit]
+Description=Synchronizes admin SSH keys with Github repo
+
+[Service]
+User=core
+WorkingDirectory=/home/core/.ssh/authorized_keys.d
+UMask=0077
+Type=oneshot
+ExecStartPre=/usr/bin/curl -s -o sshkeys ${authorized-keys}
+ExecStart=/usr/bin/update-ssh-keys

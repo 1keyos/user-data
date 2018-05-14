@@ -1,0 +1,6 @@
+[Unit]
+Description=images load 
+[Service]
+ExecStart=/opt/bin/loadbootimage.sh
+RemainAfterExit=yes
+Type=oneshot

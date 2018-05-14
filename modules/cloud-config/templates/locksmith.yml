@@ -1,0 +1,10 @@
+locksmith:
+  ${replace(endpoint, "/^.+$/", "endpoint: '${endpoint}'")}
+  ${replace(etcd-cafile, "/^.+$/", "etcd_cafile: '${etcd-cafile}'")}
+  ${replace(etcd-certfile, "/^.+$/", "etcd_certfile: '${etcd-certfile}'")}
+  ${replace(etcd-keyfile, "/^.+$/", "etcd_keyfile: '${etcd-keyfile}'")}
+  ${replace(group, "/^.+$/", "group: '${group}'")}
+  ${replace(window-start, "/^.+$/", "window_start: '${window-start}'")}
+  ${replace(window-length, "/^.+$/", "window_length: '${window-length}'")}
+  ${replace(etcd-username, "/^.+$/", "etcd_username: '${etcd-username}'")}
+  ${replace(etcd-password, "/^.+$/", "etcd_password: '${etcd-password}'")}

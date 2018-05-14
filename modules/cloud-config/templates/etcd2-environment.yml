@@ -1,0 +1,6 @@
+- name: 50-etcdctl-environment.conf
+  content: |
+    [Service]
+    ${replace(cert-file, "/^.+$/", "ExecStartPre=/usr/bin/echo 'ETCDCTL_CERT_FILE=${ cert-file }' >> /etc/environment")}
+    ${replace(key-file, "/^.+$/", "ExecStartPre=/usr/bin/echo 'ETCDCTL_KEY_FILE=${ key-file }' >> /etc/environment")}
+    ${replace(trusted-ca-file, "/^.+$/", "ExecStartPre=/usr/bin/echo 'ETCDCTL_CA_FILE=${ trusted-ca-file }' >> /etc/environment")}

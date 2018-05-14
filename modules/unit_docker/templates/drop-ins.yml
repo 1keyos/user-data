@@ -1,0 +1,10 @@
+- name: 01-opts.conf
+  content: |
+    [Service]
+    Environment="DOCKER_OPTS=${DOCKER_OPTS}"
+- name: 20-http-proxy.conf
+  content: |
+    [Service]
+    Environment="HTTP_PROXY=115.126.86.49:808"
+    Environment="HTTPS_PROXY=115.126.86.49:808"
+

@@ -1,0 +1,12 @@
+language: c
+
+env:
+  matrix:
+    - TF_VERSION=0.8.6
+
+before_install:
+  - wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip -O /tmp/terraform.zip
+  - sudo unzip -d /usr/local/bin/ /tmp/terraform.zip
+
+script:
+  - curl -o- -L https://raw.githubusercontent.com/freeletics-engineering/terraform_travis_tests/master/install.sh | sh -s -- master ${PWD}

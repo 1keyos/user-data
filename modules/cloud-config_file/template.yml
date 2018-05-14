@@ -1,0 +1,5 @@
+- path: ${path}
+  permissions: "${permissions}"
+  owner: ${owner}
+  encoding: base64
+  ${replace(content, "/^[\\s\\S]+$/", "content: |\n      ${base64encode(content)}")}

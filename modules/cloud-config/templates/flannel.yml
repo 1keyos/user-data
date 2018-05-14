@@ -1,0 +1,5 @@
+flannel:
+  ${replace(etcd-endpoints, "/^.+$/", "etcd_endpoints: '${etcd-endpoints}'")}
+  ${replace(etcd-cafile, "/^.+$/", "etcd_cafile: '${etcd-cafile}'")}
+  ${replace(etcd-certfile, "/^.+$/", "etcd_certfile: '${etcd-certfile}'")}
+  ${replace(etcd-keyfile, "/^.+$/", "etcd_keyfile: '${etcd-keyfile}'")}

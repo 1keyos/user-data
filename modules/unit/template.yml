@@ -1,0 +1,4 @@
+- name: ${name}.${type}
+  command: ${replace(replace("${enabled}", "/^(true|1)$/", "start"), "/^(false|0)$/", "stop")}
+  ${replace(drop-ins, "/^[\\s\\S]+$/", "drop-ins:\n      ${join("\n      ", split("\n", drop-ins))}")}
+  ${replace(content, "/^[\\s\\S]+$/", "content: |\n      ${join("\n      ", split("\n", content))}")}

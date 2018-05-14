@@ -1,0 +1,18 @@
+- name: 50-network-config.conf
+  content: |
+    [Unit]
+    After=etcd2.service
+    Requires=etcd2.service
+
+    [Service]
+    ${replace(public-ip, "/^.+$/", "Environment=FLANNELD_PUBLIC_IP: '${public-ip}'")}
+    ${replace(etcd-endpoints, "/^.+$/", "Environment=FLANNELD_ETCD_ENDPOINTS=${ etcd-endpoints }")}
+    ${replace(etcd-prefix, "/^.+$/", "Environment=FLANNELD_ETCD_PREFIX=${ etcd-prefix }")}
+    ${replace(key-file, "/^.+$/", "Environment=FLANNELD_ETCD_KEYFILE=${ key-file }")}
+    ${replace(cert-file, "/^.+$/", "Environment=FLANNELD_ETCD_CERTFILE=${ cert-file }")}
+    ${replace(trusted-ca-file, "/^.+$/", "Environment=FLANNELD_ETCD_CAFILE=${ trusted-ca-file }")}
+    ${replace(interface, "/^.+$/", "Environment=FLANNELD_IFACE=${ interface }")}
+    ${replace(subnet-file, "/^.+$/", "Environment=FLANNELD_SUBNET_FILE=${ subnet-file }")}
+    ${replace(ip-masq, "/^.+$/", "Environment=FLANNELD_IP_MASQ=${ ip-masq }")}
+
+    ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '${config}'

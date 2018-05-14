@@ -1,0 +1,2 @@
+ssh_authorized_keys:
+  - ${join("\n  - ", compact(split("\n", ssh_authorized_keys)))}
