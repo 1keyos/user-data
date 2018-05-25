@@ -1,0 +1,9 @@
+[Unit]
+Description=etcd start
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/mkdir -p /etc/kubernetes/
+ExecStart=/opt/bin/etcd-start 
+RemainAfterExit=yes
+

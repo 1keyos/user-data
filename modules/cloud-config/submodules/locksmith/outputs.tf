@@ -2,6 +2,7 @@ output "data" {
   value = {
     enabled       = "${lookup(var.vars, "enabled", var.enabled)}"
     endpoint      = "${lookup(var.vars, "endpoint", var.endpoint)}"
+    reboot-strategy = "${var.reboot-strategy}"
     etcd-cafile   = "${lookup(var.vars, "etcd-cafile", var.etcd-cafile)}"
     etcd-certfile = "${lookup(var.vars, "etcd-certfile", var.etcd-certfile)}"
     etcd-keyfile  = "${lookup(var.vars, "etcd-keyfile", var.etcd-keyfile)}"

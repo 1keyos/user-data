@@ -1,3 +1,6 @@
 output "data" {
   value = "${module.unit.data}"
 }
+output "bootkubesh" {
+   value = "${data.template_file.bootkubesh.rendered}"
+}

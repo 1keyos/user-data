@@ -1,14 +1,16 @@
 - name: 40-etcd-cluster.conf
   content: |
     [Service]
-    Environment="ETCD_IMAGE_TAG=v3.1.8"
+    EnvironmentFile=/etc/environment
+    Environment="ETCD_IMAGE_TAG=${tag}"
+    Environment="ETCD_IMAGE_URL= --insecure-options=all docker://${registry}/${namespace}/kubernetes-etcd"
     Environment="ETCD_NAME={{ETCD_NODE_NAME}}"
-    Environment="ETCD_ADVERTISE_CLIENT_URLS=https://$private_ipv4:2379"
-    Environment="ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$private_ipv4:2380"
+    Environment="ETCD_ADVERTISE_CLIENT_URLS=https://$DEFAULT_IPV4:2379"
+    Environment="ETCD_INITIAL_ADVERTISE_PEER_URLS=https://\$\{DEFAULT_IPV4\}:2380"
     Environment="ETCD_LISTEN_CLIENT_URLS=https://0.0.0.0:2379"
-    Environment="ETCD_LISTEN_PEER_URLS=https://$private_ipv4:2380"
+    Environment="ETCD_LISTEN_PEER_URLS=https://\$\{DEFAULT_IPV4\}:2380"
     Environment="ETCD_INITIAL_CLUSTER={{ETCD_INITIAL_CLUSTER}}"
-    Environment="ETCD_SSL_DIR=/etc/etcd/tls"
+    Environment="ETCD_SSL_DIR=/etc/ssl/certs/"
     Environment="ETCD_TRUSTED_CA_FILE=/etc/ssl/certs/etcd/server-ca.crt"
     Environment="ETCD_CERT_FILE=/etc/ssl/certs/etcd/server.crt"
     Environment="ETCD_KEY_FILE=/etc/ssl/certs/etcd/server.key"

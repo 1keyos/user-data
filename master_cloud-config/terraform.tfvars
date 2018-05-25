@@ -8,3 +8,5 @@ public_key = ""
 vpc_cidr = "netboy"
 out_dir = "../../1keyos/assets/"
 cluster_name = "clustername" 
+ip_etcd_servers = ["172.100.0.8","172.100.0.10","172.100.0.11"]
+etcd_servers = ["172.100.0.8"]

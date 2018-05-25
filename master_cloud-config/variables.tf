@@ -64,3 +64,32 @@ variable "cluster_name" {
 variable "vpc_cidr" {
   description = "VPC cidr"
 }
+variable "registry" {
+   type = "string"
+   default     = "117.25.155.104:5000"
+
+}
+variable "namespace" {
+   type  = "string"
+   default = "port"  
+}
+variable "tag" {
+   type  = "string"
+   default ="latest"
+
+}
+variable "etcd_servers" {
+  description = "List of URLs used to reach etcd servers."
+  type        = "list"
+}
+variable "ip_etcd_servers" {
+  description = "List of URLs used to reach etcd servers."
+  type        = "list"
+}
+
+variable "discovery_ip" {
+   description = "discovery_ip add"
+   type  = "string"
+   default = "172.100.0.8"
+
+}

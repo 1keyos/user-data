@@ -1,0 +1,8 @@
+[Unit]
+Description=etcd start
+
+[Service]
+Type=oneshot
+ExecStart=/opt/bin/discovery-start 
+RemainAfterExit=yes
+

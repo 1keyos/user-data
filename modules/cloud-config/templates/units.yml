@@ -1,7 +1,5 @@
 units:
   - # Ensure old version etcd is always masked
-    name: etcd.service
-    mask: true
   ${join("\n  ", split("\n", etcd2_unit))}
   ${join("\n  ", split("\n", flannel_unit))}
   ${join("\n  ", split("\n", additional_units))}

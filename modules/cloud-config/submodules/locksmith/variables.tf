@@ -51,3 +51,9 @@ variable "etcd-password" {
   description = "Password for Basic Authentication to etcd endpoints"
   default     = ""
 }
+
+variable "reboot-strategy" {
+  description = "Password for Basic Authentication to etcd endpoints"
+  default     = ""
+}
+
