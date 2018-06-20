@@ -1,0 +1,6 @@
+[template]
+src = "endpoints.tmpl"
+dest = "/etc/endpoints.conf"
+keys = [
+    "/endpoints",
+]

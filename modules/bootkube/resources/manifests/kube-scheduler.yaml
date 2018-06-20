@@ -1,8 +1,8 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kube-scheduler
-  namespace: kube-system
+  namespace: ${kube_system}
   labels:
     tier: control-plane
     k8s-app: kube-scheduler
@@ -17,8 +17,6 @@ spec:
       labels:
         tier: control-plane
         k8s-app: kube-scheduler
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       affinity:
         podAntiAffinity:
@@ -38,7 +36,7 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
       - name: kube-scheduler
-        image: ${hyperkube_image}
+        image: ${registry}/${namespace}/hyperkube:${tag}
         command:
         - ./hyperkube
         - scheduler
@@ -55,8 +53,6 @@ spec:
         runAsNonRoot: true
         runAsUser: 65534
       tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
       - key: node-role.kubernetes.io/master
         operator: Exists
         effect: NoSchedule

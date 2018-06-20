@@ -1,9 +1,8 @@
 [Unit]
 Description=Bootstrap a Kubernetes cluster
 ConditionPathExists=!/opt/bootkube/init_bootkube.done
-Wants=kubelet.service
-After=kubelet.service
-
+Wants=kubelet.service render.service
+After=kubelet.service render.service
 [Service]
 Type=oneshot
 RemainAfterExit=true

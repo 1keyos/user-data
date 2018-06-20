@@ -1,49 +1,52 @@
 [Unit]
 Description=Kubelet via Hyperkube ACI
-
+Wants=setup-network-environment.service render.service
+After=setup-network-environment.service render.service
 [Service]
-EnvironmentFile=/etc/kubernetes/kubelet.env
+EnvironmentFile=/etc/environment
+Environment="KUBELET_IMAGE_URL=  docker://${registry}/${namespace}/hyperkube"
+Environment=KUBELET_IMAGE_TAG=${tag}
 Environment="RKT_RUN_ARGS=--uuid-file-save=/var/cache/kubelet-pod.uuid \
-  --volume=resolv,kind=host,source=/etc/resolv.conf \
-  --mount volume=resolv,target=/etc/resolv.conf \
-  --volume var-lib-cni,kind=host,source=/var/lib/cni \
-  --mount volume=var-lib-cni,target=/var/lib/cni \
-  --volume var-log,kind=host,source=/var/log \
-  --mount volume=var-log,target=/var/log"
-
-ExecStartPre=/bin/mkdir -p /etc/kubernetes/manifests
-ExecStartPre=/bin/mkdir -p /srv/kubernetes/manifests
-ExecStartPre=/bin/mkdir -p /etc/kubernetes/checkpoint-secrets
-ExecStartPre=/bin/mkdir -p /etc/kubernetes/cni/net.d
-ExecStartPre=/bin/mkdir -p /var/lib/cni
-${kubeconfig_fetch_cmd}
-ExecStartPre=/usr/bin/bash -c "grep 'certificate-authority-data' /etc/kubernetes/kubeconfig | awk '{print $2}' | base64 -d > /etc/kubernetes/ca.crt"
-ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/cache/kubelet-pod.uuid
-
-ExecStart=/usr/lib/coreos/kubelet-wrapper \
-  --kubeconfig=/etc/kubernetes/kubeconfig \
-  --require-kubeconfig \
-  --cni-conf-dir=/etc/kubernetes/cni/net.d \
-  --network-plugin=cni \
-  --lock-file=/var/run/lock/kubelet.lock \
-  --exit-on-lock-contention \
-  --pod-manifest-path=/etc/kubernetes/manifests \
-  --allow-privileged \
-  --node-labels=${node_label} \
-  ${node_taints_param} \
-  ${cni_bin_dir_flag} \
-  --minimum-container-ttl-duration=6m0s \
-  --cluster-dns=${cluster_dns_ip} \
-  --cluster-domain=${cluster-domain} \
-  --client-ca-file=/etc/kubernetes/ca.crt \
-  --cloud-provider=${cloud_provider} \
-  ${cloud_provider_config} \
-  --anonymous-auth=false
-
+          --volume var-lib-cni,kind=host,source=/var/lib/cni \
+          --volume var-lib-kubelet,kind=host,source=/var/lib/kubelet \
+          --volume opt-cni-bin,kind=host,source=/opt/cni/bin \
+          --volume var-log,kind=host,source=/var/log \
+          --mount volume=var-log,target=/var/log \
+          --mount volume=var-lib-cni,target=/var/lib/cni \
+          --mount volume=var-lib-kubelet,target=/var/lib/kubelet \
+          --mount volume=opt-cni-bin,target=/opt/cni/bin \
+          --insecure-options=all"
+ ExecStartPre=/bin/mkdir -p /opt/cni/bin
+ ExecStartPre=/bin/mkdir -p /etc/kubernetes/bootstrap-secrets
+ ExecStartPre=/bin/mkdir -p /etc/kubernetes/manifests
+ ExecStartPre=/bin/mkdir -p /etc/kubernetes/cni/net.d
+ ExecStartPre=/bin/mkdir -p /etc/kubernetes/checkpoint-secrets
+ ExecStartPre=/bin/mkdir -p /etc/kubernetes/inactive-manifests
+ ExecStartPre=/bin/mkdir -p /var/lib/cni
+ ExecStartPre=/bin/mkdir -p /var/lib/kubelet/pki
+ ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/cache/kubelet-pod.uuid
+ ExecStart=/usr/lib/coreos/kubelet-wrapper \
+          --allow-privileged \
+          --anonymous-auth=false \
+          --cert-dir=/var/lib/kubelet/pki \
+          --client-ca-file=/etc/kubernetes/ca.crt  \
+          --cluster_dns=${cluster_dns_ip} \
+          --cluster_domain=${cluster-domain} \
+          --hostname-override=$$$${DEFAULT_IPV4} \
+          --cni-conf-dir=/etc/kubernetes/cni/net.d \
+          --exit-on-lock-contention \
+          --kubeconfig=/etc/kubernetes/kubeconfig \
+          --pod-infra-container-image=${registry}/${namespace}/pause-amd64:${tag} \
+          --lock-file=/var/run/lock/kubelet.lock \
+          --network-plugin=cni \
+          --node-labels=${node_label} \
+          ${node_taints_param} \
+          --pod-manifest-path=/etc/kubernetes/manifests \
+          --rotate-certificates
 ExecStop=-/usr/bin/rkt stop --uuid-file=/var/cache/kubelet-pod.uuid
-
 Restart=always
-RestartSec=10
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
+

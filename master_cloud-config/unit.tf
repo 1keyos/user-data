@@ -9,11 +9,24 @@ module "service_etcd" {
   source = "../modules/unit_etcd"
   registry = "${var.registry}"
   namespace = "${var.namespace}"
+  asset_dir = "${var.asset_dir}"
   tag = "${var.tag}"
+  etcdip = "${var.discovery_ip}"
+  etcdpeersport = "${var.etcdpeersport}"
+  etcdport   = "${var.etcdport}"
+}
+module "service_confd" {
+  source = "../modules/unit_confd"
+  asset_dir = "${var.asset_dir}"
+
 }
 
 module "service_docker" {
   source = "../modules/unit_docker"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
+
 }
 module "service_etcd-member" {
   source = "../modules/unit_etcd-member"
@@ -28,6 +41,10 @@ module "service_etcd-member" {
 module "service_kubelet" {
   source = "../modules/unit_kubelet"
   cluster-domain = "${var.k8s-domain}"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
+  api_servers = "${var.api_servers}"
 }
 
 
@@ -36,6 +53,14 @@ module "service_bootkube" {
   registry = "${var.registry}"
   namespace = "${var.namespace}"
   tag = "${var.tag}"
+}
+module "service_render" {
+  source = "../modules/unit_render"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
+  asset_dir = "${var.asset_dir}"
+
 }
 
 module "service_settimezone" {
@@ -58,10 +83,55 @@ module "config_sshkeys" {
 
 module "bootkube" {
   source = "../modules/bootkube"
-
+  ha_kube_ip = "${var.ha_kube_ip}"
   cluster_name = "${var.cluster_name}"
   api_servers = ["node1.example.com"]
   etcd_servers = ["node1.example.com"]
-  asset_dir = "${var.out_dir}/mycluster"
+  ip_etcd_servers = "${var.ip_etcd_servers}"
+  asset_dir = "${var.asset_dir}"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
+
+}
+module "helm" {
+  source = "../modules/helm"
+  asset_dir = "${var.asset_dir}"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
+
+
+}
+
+module "service_ceph-mds" {
+  source = "../modules/unit_ceph-mds"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
+
+}
+module "service_ceph-mgr" {
+  source = "../modules/unit_ceph-mgr"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
+
+}
+
+module "service_ceph-mon" {
+  source = "../modules/unit_ceph-mon"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
+
+}
+
+module "service_ceph-osd" {
+  source = "../modules/unit_ceph-osd"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
+
 }
 

@@ -7,15 +7,21 @@ variable "api_servers" {
   description = "List of URLs used to reach kube-apiserver"
   type        = "list"
 }
-
-variable "etcd_servers" {
-  description = "List of URLs used to reach etcd servers. Ignored if experimental self-hosted etcd is enabled."
-  type        = "list"
+variable "api_port" {
+  description = "api port"
+  type        = "string"
+  default     = "6433"
 }
 
-variable "experimental_self_hosted_etcd" {
-  description = "(Experimental) Create self-hosted etcd assets"
-  default     = false
+
+variable "ha_kube_ip" {
+  description = "ha kube-apiserver"
+  type        = "string"
+}
+
+variable "etcd_servers" {
+  description = "List of URLs used to reach etcd servers."
+  type        = "list"
 }
 
 variable "asset_dir" {
@@ -31,14 +37,20 @@ variable "cloud_provider" {
 
 variable "networking" {
   description = "Choice of networking provider (flannel or calico)"
-  type        = "string"
-  default     = "flannel"
+  type        = "list"
+  default     = ["flannel","calico"]
 }
 
 variable "network_mtu" {
   description = "CNI interface MTU (applies to calico only)"
   type        = "string"
   default     = "1500"
+}
+
+variable "network_ip_autodetection_method" {
+  description = "Method to autodetect the host IPv4 address (applies to calico only)"
+  type        = "string"
+  default     = "first-found"
 }
 
 variable "pod_cidr" {
@@ -50,31 +62,24 @@ variable "pod_cidr" {
 variable "service_cidr" {
   description = <<EOD
 CIDR IP range to assign Kubernetes services.
-The 1st IP will be reserved for kube_apiserver, the 10th IP will be reserved for kube-dns, the 15th IP will be reserved for self-hosted etcd, and the 20th IP will be reserved for bootstrap self-hosted etcd.
+The 1st IP will be reserved for kube_apiserver, the 10th IP will be reserved for kube-dns.
 EOD
 
   type    = "string"
   default = "10.3.0.0/24"
 }
 
-variable "container_images" {
-  description = "Container images to use"
-  type        = "map"
+variable "cluster_domain_suffix" {
+  description = "Queries for domains with the suffix will be answered by kube-dns"
+  type        = "string"
+  default     = "cluster.local"
+}
 
-  default = {
-    calico            = "quay.io/calico/node:v2.6.1"
-    calico_cni        = "quay.io/calico/cni:v1.11.0"
-    etcd              = "quay.io/coreos/etcd:v3.1.8"
-    etcd_operator     = "quay.io/coreos/etcd-operator:v0.5.0"
-    etcd_checkpointer = "quay.io/coreos/kenc:0.0.2"
-    flannel           = "quay.io/coreos/flannel:v0.9.0-amd64"
-    flannel_cni       = "quay.io/coreos/flannel-cni:v0.3.0"
-    hyperkube         = "gcr.io/google_containers/hyperkube:v1.8.2"
-    kubedns           = "gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.5"
-    kubedns_dnsmasq   = "gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.5"
-    kubedns_sidecar   = "gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.5"
-    pod_checkpointer  = "quay.io/coreos/pod-checkpointer:ec22bec63334befacc2b237ab73b1a8b95b0a654"
-  }
+
+variable "trusted_certs_dir" {
+  description = "Path to the directory on cluster nodes where trust TLS certs are kept"
+  type        = "string"
+  default     = "/usr/share/ca-certificates"
 }
 
 variable "ca_certificate" {
@@ -94,3 +99,76 @@ variable "ca_private_key" {
   type        = "string"
   default     = ""
 }
+variable "registry" {
+   type = "string"
+   default     = "117.25.155.104:5000"
+
+}
+variable "namespace" {
+   type  = "string"
+   default = "port"  
+}
+variable "kube_system" {
+   type  = "string"
+   default = "kube-system"
+}
+variable "endpoints" {
+   type  = "string"
+   default = "https://111.111.11.11"
+}
+variable "tag" {
+   type  = "string"
+   default ="latest"
+
+}
+variable "token_id" {
+   type = "string"
+   default = "pwn3in"
+}
+
+variable "token_secret" {
+   type = "string"
+   default = "mar0oyzuvjwl3fno"
+}
+variable  "ca_cert"   {
+  type        = "string"
+  default     = ""
+}
+variable  "apiserver_key" {
+  type        = "string"
+  default     = ""
+}
+variable  "apiserver_cert"  {
+  type        = "string"
+  default     = ""
+}
+variable   "serviceaccount_pub" {
+  type        = "string"
+  default     = ""
+}
+variable   "serviceaccount_key" {
+  type        = "string"
+  default     = ""
+}
+
+variable    "etcd_ca_cert" {
+  type        = "string"
+  default     = ""
+}
+variable   "etcd_client_cert" {
+  type        = "string"
+  default     = ""
+}
+variable   "etcd_client_key" {
+  type        = "string"
+  default     = ""
+}
+variable "ip_etcd_servers" {
+  description = "List of URLs used to reach etcd servers."
+  type        = "list"
+}
+variable  "etcdport" {
+   type = "string"
+   default = "4001"
+}
+

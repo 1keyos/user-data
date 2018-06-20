@@ -1,0 +1,7 @@
+[Unit]
+Description= config start
+Requires=render.service
+After=render.service
+[Service]
+EnvironmentFile=/etc/endpoints.conf
+ExecStart=/bin/bash -c 'nodepoints=$(/bin/echo $endpoints | /bin/sed -s "s/,/ --node /g");/opt/bin/confd  --watch -backend etcd  --client-ca-keys  ${asset_dir}/tls/etcd-client-ca.crt    --client-cert ${asset_dir}/tls/etcd-client.crt   --client-key  ${asset_dir}/tls/etcd-client.key    --node $nodepoints'

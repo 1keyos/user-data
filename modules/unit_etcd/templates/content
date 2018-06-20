@@ -1,9 +1,14 @@
 [Unit]
 Description=etcd start
-
+Requires=render.service
+After=render.service
 [Service]
-Type=oneshot
+EnvironmentFile=/etc/endpoints.conf
 ExecStartPre=/bin/mkdir -p /etc/kubernetes/
+ExecStartPre=/bin/mkdir -p /var/lib/etcd/
 ExecStart=/opt/bin/etcd-start 
-RemainAfterExit=yes
+ExecStartPost=/opt/bin/updateendpoints
+Restart=always
+RestartSec=10
+
 

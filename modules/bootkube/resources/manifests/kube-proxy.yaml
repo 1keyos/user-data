@@ -1,8 +1,8 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-proxy
-  namespace: kube-system
+  namespace: ${kube_system}
   labels:
     tier: node
     k8s-app: kube-proxy
@@ -16,12 +16,10 @@ spec:
       labels:
         tier: node
         k8s-app: kube-proxy
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       containers:
       - name: kube-proxy
-        image: ${hyperkube_image}
+        image: ${registry}/${namespace}/hyperkube:${tag}
         command:
         - ./hyperkube
         - proxy
@@ -37,26 +35,32 @@ spec:
         securityContext:
           privileged: true
         volumeMounts:
+        - mountPath: /lib/modules
+          name: lib-modules
+          readOnly: true
         - mountPath: /etc/ssl/certs
           name: ssl-certs-host
           readOnly: true
-        - name: etc-kubernetes
+        - name: kubeconfig
           mountPath: /etc/kubernetes
           readOnly: true
       hostNetwork: true
+      serviceAccountName: kube-proxy
       tolerations:
-      - key: CriticalAddonsOnly
+      - effect: NoSchedule
         operator: Exists
-      - key: node-role.kubernetes.io/master
+      - effect: NoExecute
         operator: Exists
-        effect: NoSchedule
       volumes:
-      - hostPath:
-          path: /usr/share/ca-certificates
-        name: ssl-certs-host
-      - name: etc-kubernetes
+      - name: lib-modules
         hostPath:
-          path: /etc/kubernetes
+          path: /lib/modules
+      - name: ssl-certs-host
+        hostPath:
+          path: ${trusted_certs_dir}
+      - name: kubeconfig
+        configMap:
+          name: kubeconfig-in-cluster
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1

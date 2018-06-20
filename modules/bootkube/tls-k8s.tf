@@ -62,7 +62,7 @@ resource "tls_cert_request" "apiserver" {
 
   subject {
     common_name  = "kube-apiserver"
-    organization = "kube-master"
+    organization = "system:masters"
   }
 
   dns_names = [
@@ -70,11 +70,13 @@ resource "tls_cert_request" "apiserver" {
     "kubernetes",
     "kubernetes.default",
     "kubernetes.default.svc",
-    "kubernetes.default.svc.cluster.local",
+    "kubernetes.default.svc.${var.cluster_domain_suffix}",
   ]
 
   ip_addresses = [
     "${cidrhost(var.service_cidr, 1)}",
+     "127.0.0.1",
+     "${var.ha_kube_ip}"
   ]
 }
 

@@ -1,8 +1,8 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kube-dns
-  namespace: kube-system
+  namespace: ${kube_system}
   labels:
     k8s-app: kube-dns
     kubernetes.io/cluster-service: "true"
@@ -23,14 +23,10 @@ spec:
     metadata:
       labels:
         k8s-app: kube-dns
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       nodeSelector:
         node-role.kubernetes.io/master: ""
       tolerations:
-      - key: "CriticalAddonsOnly"
-        operator: "Exists"
       - key: node-role.kubernetes.io/master
         operator: Exists
         effect: NoSchedule
@@ -41,7 +37,7 @@ spec:
           optional: true
       containers:
       - name: kubedns
-        image: ${kubedns_image}
+        image: ${registry}/${namespace}/k8s-dns-kube-dns-amd64:${tag}
         resources:
           # TODO: Set memory limits when we've profiled the container for large
           # clusters, then set request = limit to keep this container in
@@ -71,7 +67,7 @@ spec:
           initialDelaySeconds: 3
           timeoutSeconds: 5
         args:
-        - --domain=cluster.local.
+        - --domain=${cluster_domain_suffix}.
         - --dns-port=10053
         - --config-dir=/kube-dns-config
         - --v=2
@@ -92,7 +88,7 @@ spec:
         - name: kube-dns-config
           mountPath: /kube-dns-config
       - name: dnsmasq
-        image: ${kubedns_dnsmasq_image}
+        image: ${registry}/${namespace}/k8s-dns-dnsmasq-nanny-amd64:${tag}
         livenessProbe:
           httpGet:
             path: /healthcheck/dnsmasq
@@ -112,7 +108,7 @@ spec:
         - --cache-size=1000
         - --no-negcache
         - --log-facility=-
-        - --server=/cluster.local/127.0.0.1#10053
+        - --server=/${cluster_domain_suffix}/127.0.0.1#10053
         - --server=/in-addr.arpa/127.0.0.1#10053
         - --server=/ip6.arpa/127.0.0.1#10053
         ports:
@@ -131,7 +127,7 @@ spec:
         - name: kube-dns-config
           mountPath: /etc/k8s/dns/dnsmasq-nanny
       - name: sidecar
-        image: ${kubedns_sidecar_image}
+        image: ${registry}/${namespace}/k8s-dns-sidecar-amd64:${tag}
         livenessProbe:
           httpGet:
             path: /metrics
@@ -144,8 +140,8 @@ spec:
         args:
         - --v=2
         - --logtostderr
-        - --probe=kubedns,127.0.0.1:10053,kubernetes.default.svc.cluster.local,5,A
-        - --probe=dnsmasq,127.0.0.1:53,kubernetes.default.svc.cluster.local,5,A
+        - --probe=kubedns,127.0.0.1:10053,kubernetes.default.svc.${cluster_domain_suffix},5,SRV
+        - --probe=dnsmasq,127.0.0.1:53,kubernetes.default.svc.${cluster_domain_suffix},5,SRV
         ports:
         - containerPort: 10054
           name: metrics

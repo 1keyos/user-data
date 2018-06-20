@@ -7,6 +7,12 @@ organization = "netboy"
 public_key = ""
 vpc_cidr = "netboy"
 out_dir = "../../1keyos/assets/"
+asset_dir = "/assets"
 cluster_name = "clustername" 
-ip_etcd_servers = ["172.100.0.8","172.100.0.10","172.100.0.11"]
-etcd_servers = ["172.100.0.8"]
+ip_etcd_servers = ["117.25.155.104"]
+etcd_servers = ["117.25.155.104"]
+api_servers  = ["117.25.155.104"]
+ha_kube_ip   ="117.25.155.104"
+discovery_ip ="117.25.155.104"
+
+

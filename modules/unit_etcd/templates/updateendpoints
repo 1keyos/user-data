@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+repeat() { while :; do $@ && return; sleep 10; done }
+endpoints="https://127.0.0.1:4001"
+repeat etcdctl    --ca-file ${asset_dir}/tls/etcd-client-ca.crt   --key-file ${asset_dir}/tls/etcd-client.key    --cert-file ${asset_dir}/tls/etcd-client.crt  --endpoints $endpoints member list | awk   '{print $2","$4}' 
+
+listendpoints="$(etcdctl    --ca-file ${asset_dir}/tls/etcd-client-ca.crt   --key-file ${asset_dir}/tls/etcd-client.key    --cert-file ${asset_dir}/tls/etcd-client.crt  --endpoints $endpoints member list | awk   '{print $2","$4}')"
+
+for ilist in $listendpoints
+do 
+iname="`echo $ilist |awk -F "," '{print $1}' |sed 's/name=//g'`"
+iurl="`echo $ilist |awk -F "," '{print $2}' |sed 's/clientURLs=//g'`"
+#echo "$iname=$iurl"
+etcdctl    --ca-file ${asset_dir}/tls/etcd-client-ca.crt   --key-file ${asset_dir}/tls/etcd-client.key    --cert-file ${asset_dir}/tls/etcd-client.crt  --endpoints $endpoints  set /endpoints/$iname $iurl
+done
+

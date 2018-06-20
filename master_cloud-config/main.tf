@@ -40,18 +40,15 @@ module "userdata" {
 
   write_files = "${list(
     "${module.file-host-rkt.data}",
+    "${module.file-kubeconfig.data}",
     "${module.file-etcd.data}",
+    "${module.file-updateendpoints.data}",
+    "${module.file-endpointstoml.data}",
+    "${module.file-endpointstmpl.data}",
+    "${module.file-endpoints.data}",
     "${module.file-discovery.data}",
-    "${module.file-etcd_ca__pem.data}",
-    "${module.file-etcd_client__key.data}",
-    "${module.file-etcd_client__pem.data}",
-    "${module.file-etcd_server_ca__pem.data}",
-    "${module.file-etcd_server__key.data}",
-    "${module.file-etcd_server__pem.data}",
-    "${module.file-etcd_peer_ca__pem.data}",
-    "${module.file-etcd_peer__key.data}",
-    "${module.file-etcd_peer__pem.data}",
     "${module.file-bootkube.data}",
+    "${module.file-render.data}",
     "${module.file-loadbootimage.data}",
     "${module.file-loadbootrkt.data}",
     "${module.auth_conf.data}",
@@ -60,8 +57,6 @@ module "userdata" {
     "${module.network_conf.data}",
     "${module.node_conf.data}",
     "${module.roles_conf.data}"
-
-
   )}"
  # ssh_authorized_keys = ["${local.test}"]
 
@@ -99,11 +94,13 @@ module "userdata" {
 
   additional_units = ["${concat(var.additional_units,list(
     "${module.service_etcd.data}",
+    "${module.service_confd.data}",
     "${module.service_discovery.data}",
     "${module.config_sshkeys.data}",
     "${module.service_docker.data}",
     "${module.service_kubelet.data}",
     "${module.service_bootkube.data}",
+    "${module.service_render.data}",
     "${module.service_settimezone.data}",
     "${module.service_loadbootimage.data}",
     "${module.service_loadbootrkt.data}",

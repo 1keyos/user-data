@@ -1,13 +1,10 @@
 [Unit]
 Description=Setup Network Environment
 Documentation=https://github.com/kelseyhightower/setup-network-environment
+Wants=render.service
 Requires=network-online.target
-After=network-online.target
+After=network-online.target render.service
 [Service]
-ExecStartPre=-/usr/bin/mkdir -p /opt/bin
-ExecStartPre=/usr/bin/wget -N -P /opt/bin https://github.com/kelseyhightower/setup-network-environment/releases/download/1.0.1/setup-network-environment
-
-ExecStartPre=/usr/bin/chmod +x /opt/bin/setup-network-environment
 ExecStart=/opt/bin/setup-network-environment -o /etc/environment
 RemainAfterExit=yes
 Type=oneshot
