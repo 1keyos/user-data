@@ -1,8 +1,8 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kube-controller-manager
-  namespace: kube-system
+  namespace: ${kube_system}
   labels:
     tier: control-plane
     k8s-app: kube-controller-manager
@@ -17,8 +17,6 @@ spec:
       labels:
         tier: control-plane
         k8s-app: kube-controller-manager
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       affinity:
         podAntiAffinity:
@@ -38,13 +36,17 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
       - name: kube-controller-manager
-        image: ${hyperkube_image}
+        image: ${registry}/${namespace}/hyperkube:${tag}
         command:
         - ./hyperkube
         - controller-manager
+        - --use-service-account-credentials
         - --allocate-node-cidrs=true
         - --cloud-provider=${cloud_provider}
         - --cluster-cidr=${pod_cidr}
+        - --service-cluster-ip-range=${service_cidr}
+        - --cluster-signing-cert-file=/etc/kubernetes/secrets/ca.crt
+        - --cluster-signing-key-file=/etc/kubernetes/secrets/ca.key
         - --configure-cloud-routes=false
         - --leader-elect=true
         - --root-ca-file=/etc/kubernetes/secrets/ca.crt
@@ -67,9 +69,8 @@ spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
+      serviceAccountName: kube-controller-manager
       tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
       - key: node-role.kubernetes.io/master
         operator: Exists
         effect: NoSchedule
@@ -79,5 +80,5 @@ spec:
           secretName: kube-controller-manager
       - name: ssl-host
         hostPath:
-          path: /usr/share/ca-certificates
+          path: ${trusted_certs_dir}
       dnsPolicy: Default # Don't use cluster DNS.

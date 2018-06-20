@@ -64,3 +64,72 @@ variable "cluster_name" {
 variable "vpc_cidr" {
   description = "VPC cidr"
 }
+variable "registry" {
+   type = "string"
+   default     = "117.25.155.104:5000"
+
+}
+variable "namespace" {
+   type  = "string"
+   default = "port"  
+}
+variable "tag" {
+   type  = "string"
+   default ="latest"
+
+}
+variable "etcd_servers" {
+  description = "List of URLs used to reach etcd servers."
+  type        = "list"
+}
+variable "ip_etcd_servers" {
+  description = "List of URLs used to reach etcd servers."
+  type        = "list"
+}
+
+variable "discovery_ip" {
+   description = "discovery_ip add"
+   type  = "string"
+   default = "172.100.0.8"
+
+}
+variable "etcdpeersport" {
+
+   type = "string"
+   default = "7001"
+}
+variable  "etcdport" {
+   type = "string"
+   default = "4001"
+}
+variable "ha_kube_ip" {
+  description = "ha kube-apiserver"
+  type        = "string"
+}
+variable "ca_certificate" {
+  description = "Existing PEM-encoded CA certificate (generated if blank)"
+  type        = "string"
+  default     = ""
+}
+
+variable "ca_key_alg" {
+  description = "Algorithm used to generate ca_key (required if ca_cert is specified)"
+  type        = "string"
+  default     = "RSA"
+}
+
+variable "ca_private_key" {
+  description = "Existing Certificate Authority private key (required if ca_certificate is set)"
+  type        = "string"
+  default     = ""
+}
+variable "asset_dir" {
+  description = "Path to a directory where generated assets should be placed (contains secrets)"
+  type        = "string"
+}
+variable "api_servers" {
+  description = "List of URLs used to reach kube-apiserver"
+  type        = "list"
+}
+
+

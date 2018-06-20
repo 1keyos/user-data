@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bootstrap-token-${token_id}
+  namespace: ${kube_system}
+type: bootstrap.kubernetes.io/token
+stringData:
+  token-id: "${token_id}"
+  token-secret: "${token_secret}"
+  usage-bootstrap-authentication: "true"

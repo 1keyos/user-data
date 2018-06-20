@@ -1,0 +1,9 @@
+#!/bin/bash
+exec /usr/bin/rkt run \
+          --volume imagesconf,kind=host,source=/etc/harbor/ --mount volume=imagesconf,target=/etc/harbor/ \
+          --volume etcdimage,kind=host,source=/var/lib/discovery/etcd/ --mount volume=etcdimage,target=/data \
+          --insecure-options=all  --net=host docker://${etcd_image} \
+          --exec  /start-discovery.sh
+
+
+

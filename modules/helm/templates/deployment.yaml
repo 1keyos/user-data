@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: helm
+    name: tiller
+  name: tiller-deploy
+  namespace: ${tiller_namespace}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: helm
+        name: tiller
+    spec:
+      serviceAccount: tiller
+      containers:
+      - env:
+        - name: TILLER_NAMESPACE
+          value: ${tiller_namespace}
+        - name: TILLER_HISTORY_MAX
+          value: "0"
+        image: ${registry}/${namespace}/tiller:${tag}
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: 44135
+          initialDelaySeconds: 1
+          timeoutSeconds: 1
+        name: tiller
+        ports:
+        - name: tiller
+          containerPort: 44134
+        - name: http
+          containerPort: 44135
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 44135
+          initialDelaySeconds: 1
+          timeoutSeconds: 1

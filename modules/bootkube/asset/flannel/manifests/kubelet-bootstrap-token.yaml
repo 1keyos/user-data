@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bootstrap-token-czvf5g
+  namespace: kube-system
+type: bootstrap.kubernetes.io/token
+stringData:
+  token-id: "czvf5g"
+  token-secret: "dtsexl79zu7rmtmp"
+  usage-bootstrap-authentication: "true"

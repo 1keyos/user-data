@@ -4,11 +4,9 @@ data "template_file" "docker-opts" {
   vars {
     string = "${join(" ", concat(
         list(
-          "--log-driver=${var.log-driver}",
           "--log-opt max-size=50m",
-          "--log-opt max-file=5",
-          "-s chainfs",
-          "--storage-opt chainfs.volume_driver=btrfs"
+          "--insecure-registry ${var.registry}",
+          "--log-opt max-file=5"
         ),
         "${var.docker-opts}"
     ))}"

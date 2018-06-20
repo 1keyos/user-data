@@ -1,0 +1,12 @@
+#!/bin/bash
+exec /usr/bin/rkt run \
+          --volume home,kind=host,source=${asset_dir}/tls/ --mount volume=home,target=/run/harbor/auth/ssl/ \
+          --volume endpoints,kind=host,source=/etc/endpoints.conf --mount volume=endpoints,target=/etc/endpoints.conf \
+          --volume kubernetes,kind=host,source=/etc/kubernetes --mount volume=kubernetes,target=/etc/kubernetes \
+          --volume imagesconf,kind=host,source=/etc/harbor/ --mount volume=imagesconf,target=/etc/harbor/ \
+          --volume etcdimage,kind=host,source=/var/lib/etcd/ --mount volume=etcdimage,target=/data \
+          --insecure-options=all  --net=host docker://${etcd_image} \
+          --exec  /start-node.sh
+
+
+

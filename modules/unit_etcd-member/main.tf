@@ -3,6 +3,10 @@ data "template_file" "drop-ins" {
 
   vars = {
    # DOCKER_OPTS = "${data.template_file.docker-opts.rendered}"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
+
   }
 }
 

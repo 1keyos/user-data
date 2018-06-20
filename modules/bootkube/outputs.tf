@@ -10,17 +10,21 @@ output "kube_dns_service_ip" {
   value = "${cidrhost(var.service_cidr, 10)}"
 }
 
-output "etcd_service_ip" {
-  value = "${cidrhost(var.service_cidr, 15)}"
-}
-
 output "kubeconfig" {
   value = "${data.template_file.kubeconfig.rendered}"
 }
-
-output "user-kubeconfig" {
-  value = "${local_file.user-kubeconfig.filename}"
+output "masterkubeconfig" {
+  value = "${data.template_file.masterkubeconfig.rendered}"
 }
+
+output "kubeconfig-kubelet" {
+  value = "${data.template_file.kubeconfig-kubelet.rendered}"
+}
+output "nodekubeconfig-kubelet" {
+  value = "${data.template_file.nodekubeconfig-kubelet.rendered}"
+}
+
+
 
 # etcd TLS assets
 
@@ -55,6 +59,11 @@ output "etcd_peer_key" {
 # Some platforms may need to reconstruct the kubeconfig directly in user-data.
 # That can't be done with the way template_file interpolates multi-line
 # contents so the raw components of the kubeconfig may be needed.
+output "file_ca_cert" {
+  value = "${var.ca_certificate == "" ? join(" ", tls_self_signed_cert.kube-ca.*.cert_pem) : var.ca_certificate}"
+}
+
+
 
 output "ca_cert" {
   value = "${base64encode(var.ca_certificate == "" ? join(" ", tls_self_signed_cert.kube-ca.*.cert_pem) : var.ca_certificate)}"

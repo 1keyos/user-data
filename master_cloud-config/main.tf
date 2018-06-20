@@ -40,13 +40,23 @@ module "userdata" {
 
   write_files = "${list(
     "${module.file-host-rkt.data}",
-    "${module.file-etcd_ca__pem.data}",
-    "${module.file-etcd_client__key.data}",
-    "${module.file-etcd_client__pem.data}",
+    "${module.file-kubeconfig.data}",
+    "${module.file-etcd.data}",
+    "${module.file-updateendpoints.data}",
+    "${module.file-endpointstoml.data}",
+    "${module.file-endpointstmpl.data}",
+    "${module.file-endpoints.data}",
+    "${module.file-discovery.data}",
     "${module.file-bootkube.data}",
+    "${module.file-render.data}",
     "${module.file-loadbootimage.data}",
-    "${module.file-loadbootrkt.data}"
-
+    "${module.file-loadbootrkt.data}",
+    "${module.auth_conf.data}",
+    "${module.harbor_auth_conf.data}",
+    "${module.images_conf.data}",
+    "${module.network_conf.data}",
+    "${module.node_conf.data}",
+    "${module.roles_conf.data}"
   )}"
  # ssh_authorized_keys = ["${local.test}"]
 
@@ -54,7 +64,7 @@ module "userdata" {
  ssh_authorized_keys =  ["${var.public_key == "" ? tls_private_key.default.public_key_openssh : var.public_key}"]
 
   etcd2 = {
-    enabled        = false
+#    enabled        = false
     mask           = true
 
     proxy                = "on"
@@ -83,11 +93,14 @@ module "userdata" {
   }
 
   additional_units = ["${concat(var.additional_units,list(
-    "${module.service_etcd-member.data}",
+    "${module.service_etcd.data}",
+    "${module.service_confd.data}",
+    "${module.service_discovery.data}",
     "${module.config_sshkeys.data}",
     "${module.service_docker.data}",
     "${module.service_kubelet.data}",
     "${module.service_bootkube.data}",
+    "${module.service_render.data}",
     "${module.service_settimezone.data}",
     "${module.service_loadbootimage.data}",
     "${module.service_loadbootrkt.data}",
@@ -95,46 +108,3 @@ module "userdata" {
   ))}"]
 }
 
-module "service_docker" {
-  source = "../modules/unit_docker"
-}
-module "service_etcd-member" {
-  source = "../modules/unit_etcd-member"
-}
-
-module "service_kubelet" {
-  source = "../modules/unit_kubelet"
-  cluster-domain = "${var.k8s-domain}"
-}
-
-
-module "service_bootkube" {
-  source = "../modules/unit_bootkube"
-}
-
-module "service_settimezone" {
-  source = "../modules/unit_settimezone"
-}
-module "service_loadbootimage" {
-  source = "../modules/unit_loadbootimage"
-}
-module "service_loadbootrkt" {
-  source = "../modules/unit_loadbootrkt"
-}
-
-module "service_setup-network-environment" {
-  source = "../modules/unit_setup-network-environment"
-}
-
-module "config_sshkeys" {
-  source = "../modules/unit_sshkeys"
-}
-
-module "bootkube" {
-  source = "../modules/bootkube"
-
-  cluster_name = "${var.cluster_name}"
-  api_servers = ["node1.example.com"]
-  etcd_servers = ["node1.example.com"]
-  asset_dir = "${var.out_dir}/mycluster"
-}

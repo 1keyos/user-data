@@ -1,0 +1,4 @@
+endpoints="{{$services := getvs "/endpoints/*"}}{{join $services ","}}"
+firstnode=${etcdip}
+etcd_name=${etcd_name}
+

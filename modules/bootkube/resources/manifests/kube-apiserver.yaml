@@ -1,8 +1,8 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-apiserver
-  namespace: kube-system
+  namespace: ${kube_system}
   labels:
     tier: control-plane
     k8s-app: kube-apiserver
@@ -18,33 +18,30 @@ spec:
         k8s-app: kube-apiserver
       annotations:
         checkpointer.alpha.coreos.com/checkpoint: "true"
-        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       containers:
       - name: kube-apiserver
-        image: ${hyperkube_image}
+        image: ${registry}/${namespace}/hyperkube:${tag}
         command:
-        - /usr/bin/flock
-        - /var/lock/api-server.lock
         - /hyperkube
         - apiserver
-        - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds
+        - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,ValidatingAdmissionWebhook,ResourceQuota,DefaultTolerationSeconds,NodeRestriction,MutatingAdmissionWebhook
         - --advertise-address=$(POD_IP)
         - --allow-privileged=true
         - --anonymous-auth=false
-        - --authorization-mode=RBAC
+        - --authorization-mode=Node,RBAC
         - --bind-address=0.0.0.0
         - --client-ca-file=/etc/kubernetes/secrets/ca.crt
         - --cloud-provider=${cloud_provider}
+        - --enable-bootstrap-token-auth=true
         - --etcd-cafile=/etc/kubernetes/secrets/etcd-client-ca.crt
         - --etcd-certfile=/etc/kubernetes/secrets/etcd-client.crt
         - --etcd-keyfile=/etc/kubernetes/secrets/etcd-client.key
-        - --etcd-quorum-read=true
-        - --etcd-servers=${etcd_servers}
+        - --etcd-servers=${endpoints}
         - --insecure-port=0
         - --kubelet-client-certificate=/etc/kubernetes/secrets/apiserver.crt
         - --kubelet-client-key=/etc/kubernetes/secrets/apiserver.key
-        - --secure-port=443
+        - --secure-port=${api_port}
         - --service-account-key-file=/etc/kubernetes/secrets/service-account.pub
         - --service-cluster-ip-range=${service_cidr}
         - --storage-backend=etcd3
@@ -63,28 +60,23 @@ spec:
         - mountPath: /etc/kubernetes/secrets
           name: secrets
           readOnly: true
-        - mountPath: /var/lock
-          name: var-lock
-          readOnly: false
       hostNetwork: true
       nodeSelector:
         node-role.kubernetes.io/master: ""
       tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
       - key: node-role.kubernetes.io/master
         operator: Exists
         effect: NoSchedule
       volumes:
       - name: ssl-certs-host
         hostPath:
-          path: /usr/share/ca-certificates
+          path: ${trusted_certs_dir}
       - name: secrets
         secret:
           secretName: kube-apiserver
-      - name: var-lock
-        hostPath:
-          path: /var/lock
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
