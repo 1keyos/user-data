@@ -5,4 +5,4 @@ cd `dirname $0`
 terraform init
 terraform get --update
 terraform plan
-echo "yes" | terraform apply
+terraform apply

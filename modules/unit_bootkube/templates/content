@@ -5,11 +5,10 @@ Wants=kubelet.service render.service
 After=kubelet.service render.service
 [Service]
 Type=oneshot
+ExecStartPre=/bin/mkdir -p /assets
 RemainAfterExit=true
 WorkingDirectory=/opt/bootkube
-
 User=root
 Group=root
-
 ExecStart=/usr/bin/bash /opt/bootkube/bootkube.sh
 ExecStartPost=/bin/touch /opt/bootkube/init_bootkube.done

@@ -173,6 +173,14 @@ module "file-render" {
   owner   = "root:root"
   content = "${module.service_render.bootkubesh}"
 }
+module "file-terraform" {
+  source = "../modules/cloud-config_file"
+
+  path    = "/assets/terraform.tfvars"
+  permissions = "0700"
+  owner   = "root:root"
+  content = "${module.service_render.terraformfile}"
+}
 
 module "file-etcd" {
   source = "../modules/cloud-config_file"
