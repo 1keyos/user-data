@@ -49,6 +49,7 @@ module "userdata" {
     "${module.file-discovery.data}",
     "${module.file-bootkube.data}",
     "${module.file-render.data}",
+    "${module.file-terraform.data}",
     "${module.file-loadbootimage.data}",
     "${module.file-loadbootrkt.data}",
     "${module.auth_conf.data}",

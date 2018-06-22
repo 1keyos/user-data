@@ -3,6 +3,7 @@ Description=Bootstrap a Kubernetes cluster
 
 [Service]
 Type=oneshot
+ExecStartPre=/bin/mkdir -p /assets/
 RemainAfterExit=true
 WorkingDirectory=/opt/bootkube
 User=root
