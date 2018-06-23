@@ -15,6 +15,7 @@ data "template_file" "content" {
     registry = "${var.registry}"
     namespace = "${var.namespace}"
     tag = "${var.tag}"
+    asset_dir="${var.asset_dir}"
 
   }
 }

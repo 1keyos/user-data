@@ -2,6 +2,8 @@ data "template_file" "content" {
   template = "${file("${path.module}/templates/content")}"
 
   vars = {
+   asset_dir  = "${var.asset_dir}"
+
   }
 }
 data  "template_file" "bootkubesh" {

@@ -3,7 +3,9 @@ Description=Bootstrap a Kubernetes cluster
 
 [Service]
 Type=oneshot
-ExecStartPre=/bin/mkdir -p /assets/
+ExecStartPre=/bin/mkdir -p ${asset_dir}/
+ExecStartPre=/bin/mkdir -p /etc/kubernetes
+ExecStartPost=/bin/find  ${asset_dir}/addons/ -type f -name "*.yaml"  -exec cp  {} ${asset_dir}/manifests/  ";"
 RemainAfterExit=true
 WorkingDirectory=/opt/bootkube
 User=root

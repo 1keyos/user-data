@@ -44,6 +44,7 @@ module "service_kubelet" {
   registry = "${var.registry}"
   namespace = "${var.namespace}"
   tag = "${var.tag}"
+  asset_dir="${var.asset_dir}"
   api_servers = "${var.api_servers}"
 }
 
@@ -53,6 +54,7 @@ module "service_bootkube" {
   registry = "${var.registry}"
   namespace = "${var.namespace}"
   tag = "${var.tag}"
+  asset_dir="${var.asset_dir}"
 }
 module "service_render" {
   source = "../modules/unit_render"

@@ -40,7 +40,6 @@ module "userdata" {
 
   write_files = "${list(
     "${module.file-host-rkt.data}",
-    "${module.file-kubeconfig.data}",
     "${module.file-etcd.data}",
     "${module.file-updateendpoints.data}",
     "${module.file-endpointstoml.data}",
