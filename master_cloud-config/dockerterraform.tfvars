@@ -6,6 +6,7 @@ etcd_client_key = "netboy"
 organization = "netboy"
 public_key = ""
 vpc_cidr = "netboy"
+
 out_dir = "../../1keyos/assetsdocker/"
 asset_dir = "/assetsdocker"
 cluster_name = "clustername" 
@@ -14,5 +15,4 @@ etcd_servers = ["172.100.0.8"]
 api_servers  = ["172.100.0.8"]
 ha_kube_ip   ="172.100.0.8"
 discovery_ip ="172.100.0.8"
-
-
+networking =["flannel"]

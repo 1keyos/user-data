@@ -122,6 +122,7 @@ module "bootkube" {
   registry = "${var.registry}"
   namespace = "${var.namespace}"
   tag = "${var.tag}"
+  networking = "${var.networking}"
 
 }
 module "helm" {
