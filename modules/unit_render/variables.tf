@@ -134,6 +134,12 @@ variable "api_servers" {
   description = "List of URLs used to reach kube-apiserver"
   type        = "list"
 }
+variable "networking" {
+  description = "Choice of networking provider (flannel or calico)"
+  type        = "list"
+  default     = ["flannel","calico"]
+}
+
 
 
 

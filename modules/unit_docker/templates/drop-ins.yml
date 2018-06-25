@@ -2,4 +2,8 @@
   content: |
     [Service]
     Environment="DOCKER_OPTS=${DOCKER_OPTS}"
+- name: docker-mountflags.conf
+  content: |
+    [Service]
+    MountFlags=rslave
 

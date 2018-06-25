@@ -28,3 +28,5 @@ ca_key_alg="${ca_key_alg}"
 ca_private_key="${ca_private_key}"
 asset_dir="${asset_dir}"
 api_servers=["${api_servers}"]
+networking = ["${networking}"]
+

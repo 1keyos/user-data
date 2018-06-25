@@ -35,8 +35,8 @@ sed -i  "s/ca.crt:.*$/ca.crt: \$\{ca_cert\}/g" `find ./asset/all -type f`
 sed -i  "s/etcd-client-ca.crt:.*$/etcd-client-ca.crt: \$\{etcd_ca_cert\}/g" `find ./asset/all -type f`
 sed -i  "s/etcd-client.crt:.*$/etcd-client.crt: \$\{etcd_client_cert\}/g" `find ./asset/all -type f`
 sed -i  "s/etcd-client.key:.*$/etcd-client.key: \$\{etcd_client_key\}/g" `find ./asset/all -type f`
-sed -i  "s/ca.key:.*$/ca.key: \$\{etcd_client_cert\}/g" `find ./asset/all -type f`
-sed -i  "s/service-account.key:.*$/service-account.key: \$\{etcd_client_key\}/g" `find ./asset/all -type f`
+sed -i  "s/ca.key:.*$/ca.key: \$\{ca_key\}/g" `find ./asset/all -type f`
+sed -i  "s/service-account.key:.*$/service-account.key: \$\{serviceaccount_key}/g" `find ./asset/all -type f`
 sed -i  "s/certificate-authority-data:.*$/certificate-authority-data: \$\{ca_cert\}/g" `find ./asset/all -type f`
 sed -i  "s/client-certificate-data:.*$/client-certificate-data: \$\{kubelet_cert\}/g" `find ./asset/all -type f`
 sed -i  "s/client-key-data:.*$/client-key-data: \$\{kubelet_key\}/g" `find ./asset/all -type f`

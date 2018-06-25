@@ -25,6 +25,7 @@ Environment="RKT_RUN_ARGS=--uuid-file-save=/var/cache/kubelet-pod.uuid \
  ExecStartPre=/bin/mkdir -p /var/lib/cni
  ExecStartPre=/bin/cp  ${asset_dir}/tls/ca.crt  /etc/kubernetes/ca.crt
  ExecStartPre=/bin/cp  ${asset_dir}/auth/kubeconfig-kubelet  /etc/kubernetes/kubeconfig
+ ExecStartPre=/bin/cp  ${asset_dir}/auth/kubeconfig  /etc/kubernetes/kubeconfig-admin
  ExecStartPre=/bin/mkdir -p /var/lib/kubelet/pki
  ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/cache/kubelet-pod.uuid
  ExecStart=/usr/lib/coreos/kubelet-wrapper \
