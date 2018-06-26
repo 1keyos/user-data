@@ -300,7 +300,7 @@ data:
                       command:
                       - etcd-operator
                       - --create-crd=false
-                      image: ${registry}/${namespace}/etcd-operator@sha256:bd944a211eaf8f31da5e6d69e8541e7cada8f16a9f7a5a570b22478997819943
+                      image: ${registry}/${namespace}/etcd-operator:v0.6.1
                       env:
                       - name: MY_POD_NAMESPACE
                         valueFrom:
@@ -485,7 +485,7 @@ data:
                       command:
                       - etcd-operator
                       - --create-crd=false
-                      image: ${registry}/${namespace}/etcd-operator@sha256:db563baa8194fcfe39d1df744ed70024b0f1f9e9b55b5923c2f3a413c44dc6b8
+                      image: ${registry}/${namespace}/etcd-operator:v0.9.0
                       env:
                       - name: MY_POD_NAMESPACE
                         valueFrom:
@@ -496,7 +496,7 @@ data:
                           fieldRef:
                             fieldPath: metadata.name
                     - name: etcd-backup-operator
-                      image: ${registry}/${namespace}/etcd-operator@sha256:db563baa8194fcfe39d1df744ed70024b0f1f9e9b55b5923c2f3a413c44dc6b8
+                      image: ${registry}/${namespace}/etcd-operator:v0.9.0
                       command:
                       - etcd-backup-operator
                       - --create-crd=false
@@ -510,7 +510,7 @@ data:
                           fieldRef:
                             fieldPath: metadata.name
                     - name: etcd-restore-operator
-                      image: ${registry}/${namespace}/etcd-operator@sha256:db563baa8194fcfe39d1df744ed70024b0f1f9e9b55b5923c2f3a413c44dc6b8
+                      image: ${registry}/${namespace}/etcd-operator:v0.9.0
                       command:
                       - etcd-restore-operator
                       - --create-crd=false
@@ -768,7 +768,7 @@ data:
                       command:
                       - etcd-operator
                       - --create-crd=false
-                      image: ${registry}/${namespace}/etcd-operator@sha256:c0301e4686c3ed4206e370b42de5a3bd2229b9fb4906cf85f3f30650424abec2
+                      image: ${registry}/${namespace}/etcd-operator:v0.9.2
                       env:
                       - name: MY_POD_NAMESPACE
                         valueFrom:
@@ -779,7 +779,7 @@ data:
                           fieldRef:
                             fieldPath: metadata.name
                     - name: etcd-backup-operator
-                      image: ${registry}/${namespace}/etcd-operator@sha256:c0301e4686c3ed4206e370b42de5a3bd2229b9fb4906cf85f3f30650424abec2
+                      image: ${registry}/${namespace}/etcd-operator:v0.9.2
                       command:
                       - etcd-backup-operator
                       - --create-crd=false
@@ -793,7 +793,7 @@ data:
                           fieldRef:
                             fieldPath: metadata.name
                     - name: etcd-restore-operator
-                      image: ${registry}/${namespace}/etcd-operator@sha256:c0301e4686c3ed4206e370b42de5a3bd2229b9fb4906cf85f3f30650424abec2
+                      image: ${registry}/${namespace}/etcd-operator:v0.9.2
                       command:
                       - etcd-restore-operator
                       - --create-crd=false
@@ -1057,7 +1057,7 @@ data:
                     serviceAccount: prometheus-operator-0-14-0
                     containers:
                     - name: prometheus-operator
-                      image: ${registry}/${namespace}/prometheus-operator@sha256:5037b4e90dbb03ebdefaa547ddf6a1f748c8eeebeedf6b9d9f0913ad662b5731
+                      image: ${registry}/${namespace}/prometheus-operator:v0.14.0
                       command:
                         - sh
                         - -c
@@ -1314,7 +1314,7 @@ data:
                     serviceAccount: prometheus-operator-0-14-0
                     containers:
                     - name: prometheus-operator
-                      image: ${registry}/${namespace}/prometheus-operator@sha256:0e92dd9b5789c4b13d53e1319d0a6375bcca4caaf0d698af61198061222a576d
+                      image: ${registry}/${namespace}/prometheus-operator:v0.15.0
                       command:
                         - sh
                         - -c
@@ -1554,7 +1554,7 @@ data:
                     serviceAccountName: vault-operator
                     containers:
                     - name: vault-operator
-                      image: ${registry}/${namespace}/vault-operator@sha256:945a0a6d88cf6fa2bce9a83019a2a64f74d89fc8281301a4259f3302eabc79e6
+                      image: ${registry}/${namespace}/vault-operator:v0.1.9
                       env:
                       - name: MY_POD_NAMESPACE
                         valueFrom:
@@ -1730,7 +1730,7 @@ data:
                     serviceAccountName: vault-operator
                     containers:
                     - name: vault-operator
-                      image: ${registry}/${namespace}/vault-operator@sha256:74036811bc5d6cc1a136d8cc6d5577db67f29ba95eba02fbf0c3a8d2357dc8fe
+                      image: ${registry}/${namespace}/vault-operator:v0.1.5
                       env:
                       - name: MY_POD_NAMESPACE
                         valueFrom:
