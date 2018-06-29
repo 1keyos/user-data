@@ -1,0 +1,131 @@
+##---
+# Source: catalog/templates/apiserver-deployment.yaml
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: catalog-catalog-apiserver
+  labels:
+    app: catalog-catalog-apiserver
+    chart: "catalog-0.1.23"
+    release: "catalog"
+    heritage: "Tiller"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-catalog-apiserver
+  template:
+    metadata:
+      labels:
+        app: catalog-catalog-apiserver
+        chart: "catalog-0.1.23"
+        release: "catalog"
+        releaseRevision: "0"
+        heritage: "Tiller"
+      
+    spec:
+      serviceAccountName: "service-catalog-apiserver"
+      containers:
+      - name: apiserver
+        image: ${registry}/${namespace}/service-catalog:${tag}service-catalog:v0.1.23
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 20Mi
+          limits:
+            cpu: 100m
+            memory: 30Mi
+        args:
+        - apiserver
+        
+        - --enable-admission-plugins
+        - "KubernetesNamespaceLifecycle,DefaultServicePlan,ServiceBindingsLifecycle,ServicePlanChangeValidator,BrokerAuthSarCheck"
+        - --secure-port
+        - "8443"
+        - --storage-type
+        - etcd
+        - --etcd-servers
+        - http://localhost:2379
+        - -v
+        - "10"
+        ports:
+        - containerPort: 8443
+        volumeMounts:
+        - name: apiserver-cert
+          mountPath: /var/run/kubernetes-service-catalog
+          readOnly: true
+        readinessProbe:
+          httpGet:
+            port: 8443
+            path: /healthz
+            scheme: HTTPS
+          failureThreshold: 1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            port: 8443
+            path: /healthz
+            scheme: HTTPS
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+      - name: etcd
+        image: ${registry}/${namespace}/etcd:${tag}etcd:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 30Mi
+          limits:
+            cpu: 100m
+            memory: 40Mi
+        env:
+        - name: ETCD_DATA_DIR
+          value: /etcd-data-dir
+        command:
+        - /usr/local/bin/etcd
+        - --listen-client-urls
+        - http://0.0.0.0:2379
+        - --advertise-client-urls
+        - http://localhost:2379
+        ports:
+        - containerPort: 2379
+        volumeMounts:
+        - name: etcd-data-dir
+          mountPath: /etcd-data-dir
+        readinessProbe:
+          httpGet:
+            port: 2379
+            path: /health
+          failureThreshold: 1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            port: 2379
+            path: /health
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+      
+      volumes:
+      - name: apiserver-cert
+        secret:
+          secretName: catalog-catalog-apiserver-cert
+          items:
+          - key: tls.crt
+            path: apiserver.crt
+          - key: tls.key
+            path: apiserver.key
+      - name: etcd-data-dir
+        emptyDir: {}

@@ -1,0 +1,21 @@
+##---
+# Source: catalog/templates/apiserver-service.yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: catalog-catalog-apiserver
+  labels:
+    app: catalog-catalog-apiserver
+    chart: "catalog-0.1.23"
+    release: "catalog"
+    heritage: "Tiller"
+spec:
+  type: NodePort
+  selector:
+    app: catalog-catalog-apiserver
+  ports:
+  - name: secure
+    protocol: TCP
+    port: 443
+    targetPort: 8443
+    nodePort: 30443
