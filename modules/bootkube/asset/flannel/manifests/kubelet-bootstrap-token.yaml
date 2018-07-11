@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: bootstrap-token-xl62hw
+  name: bootstrap-token-cwu1p9
   namespace: kube-system
 type: bootstrap.kubernetes.io/token
 stringData:
-  token-id: "xl62hw"
-  token-secret: "cseiffkpni6iga21"
+  token-id: "cwu1p9"
+  token-secret: "di1rot0zmjcex4ox"
   usage-bootstrap-authentication: "true"

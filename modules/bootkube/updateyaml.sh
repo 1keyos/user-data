@@ -47,8 +47,8 @@ sed -i  "s/name: bootstrap-token-.*$/name: bootstrap-token-\$\{token_id\}/g" `fi
 sed -i  "s/https:\/\/127.0.0.1:2379/\$\{etcd_servers\}/g" `find ./asset/all -type f`
 sed -i "s/host-local/calico-ipam/g"  `find ./asset/all -type f`
 sed -i "/usePodCidr/d"  `find ./asset/all -type f`
-sed -i "/calico-ipam/a\            \"assign_ipv4\": \"true\""  `find ./asset/all -type f`
-sed -i "/calico-ipam/a\            \"assign_ipv6\": \"true\""  `find ./asset/all -type f`
+sed -i "/\"type\": \"calico-ipam\"/a\            \"assign_ipv4\": \"true\""  `find ./asset/all -type f`
+sed -i "/\"type\": \"calico-ipam\"/a\            \"assign_ipv6\": \"true\""  `find ./asset/all -type f`
 mkdir -p resources/calico
 mv  asset/all/manifests/calico* resources/calico/
 mkdir -p   resources/flannel/
