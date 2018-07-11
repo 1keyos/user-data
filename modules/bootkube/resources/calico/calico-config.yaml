@@ -19,7 +19,7 @@ data:
           "nodename": "__KUBERNETES_NODE_NAME__",
           "ipam": {
             "type": "calico-ipam",
-            "assign_ipv6": "true"
+            "assign_ipv6": "true",
             "assign_ipv4": "true"
           },
           "policy": {
