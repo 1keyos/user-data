@@ -90,6 +90,7 @@ ca_private_key="${var.ca_private_key}"
 asset_dir="${var.asset_dir}"
 api_servers="${var.api_servers}"
 asset_dir = "${var.asset_dir}"
+networking = "${var.networking}"
 
 }
 

@@ -18,8 +18,9 @@ data:
           "datastore_type": "kubernetes",
           "nodename": "__KUBERNETES_NODE_NAME__",
           "ipam": {
-            "type": "host-local",
-            "subnet": "usePodCidr"
+            "type": "calico-ipam",
+            "assign_ipv6": "true"
+            "assign_ipv4": "true"
           },
           "policy": {
             "type": "k8s",

@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: bootstrap-token-dc29ym
+  name: bootstrap-token-dnaj1k
   namespace: kube-system
 type: bootstrap.kubernetes.io/token
 stringData:
-  token-id: "dc29ym"
-  token-secret: "vj913ecxap0grnvj"
+  token-id: "dnaj1k"
+  token-secret: "3d5b35h1lqyhz34m"
   usage-bootstrap-authentication: "true"

@@ -95,7 +95,9 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
             - name: SKIP_CNI_BINARIES
-              value: bridge,cnitool,dhcp,flannel,host-local,ipvlan,loopback,macvlan,noop,portmap,ptp,tuning
+              value: bridge,cnitool,dhcp,flannel,calico-ipam,ipvlan,loopback,macvlan,noop,portmap,ptp,tuning
+            "assign_ipv6": "true"
+            "assign_ipv4": "true"
           volumeMounts:
             - mountPath: /host/opt/cni/bin
               name: cni-bin-dir
