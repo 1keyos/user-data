@@ -4,6 +4,7 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: catalog-catalog-controller-manager
+  namespace: ${kube_system}
   labels:
     app: catalog-catalog
     chart: "catalog-0.1.23"
@@ -28,7 +29,7 @@ spec:
       serviceAccountName: "service-catalog-controller-manager"
       containers:
       - name: controller-manager
-        image: ${registry}/${namespace}/service-catalog:${tag}service-catalog:v0.1.23
+        image: ${registry}/${namespace}/service-catalog:${tag}
         imagePullPolicy: Always
         resources:
           requests:
@@ -46,7 +47,7 @@ spec:
         - controller-manager
         - --secure-port
         - "8444"
-        - "--cluster-id-configmap-namespace=${kube-system}"
+        - "--cluster-id-configmap-namespace=${kube_system}"
         
         - "--leader-elect=false"
         
@@ -94,3 +95,5 @@ spec:
             path: apiserver.crt
           - key: tls.key
             path: apiserver.key
+          - key: requestheader-ca.crt
+            path: requestheader-ca.crt

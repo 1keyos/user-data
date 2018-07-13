@@ -38,7 +38,7 @@ servicebroker:
   # OLM Service Broker doesn't need to be HA; scale with load
   replicaCount: 1
   image:
-    ref: quay.io/coreos/olm-service-broker:local
+    ref: quay.io/coreos/alm-service-broker:local
     pullPolicy: IfNotPresent
   service:
     # port for readiness/liveness probes

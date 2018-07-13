@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: bootstrap-token-jpc8go
+  name: bootstrap-token-op8xlw
   namespace: kube-system
 type: bootstrap.kubernetes.io/token
 stringData:
-  token-id: "jpc8go"
-  token-secret: "53jrnfg9ezg2yn31"
+  token-id: "op8xlw"
+  token-secret: "30q064ryizgzh0pb"
   usage-bootstrap-authentication: "true"

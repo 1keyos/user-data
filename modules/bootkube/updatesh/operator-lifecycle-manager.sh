@@ -15,7 +15,12 @@ fi
 
 cp ../my-values.yaml ./
 sed -i "s/:local/:${version}/g" my-values.yaml
+
 ./scripts/package-release.sh 1.0.0-myolm ./my-olm-deployment my-values.yaml
+sed -i  "s/space: local.*$/space: kube-system/g" `find ./my-olm-deployment -type f`
+#- local
+sed -i  "s/- local.*$/- kube-system/g" `find ./my-olm-deployment -type f`
+
 sed -i  "s/@sha256:bd944a211eaf8f31da5e6d69e8541e7cada8f16a9f7a5a570b22478997819943/:v0.6.1/g" `find ./my-olm-deployment -type f`
 sed -i  "s/@sha256:db563baa8194fcfe39d1df744ed70024b0f1f9e9b55b5923c2f3a413c44dc6b8/:v0.9.0/g" `find ./my-olm-deployment -type f`
 sed -i  "s/@sha256:c0301e4686c3ed4206e370b42de5a3bd2229b9fb4906cf85f3f30650424abec2/:v0.9.2/g" `find ./my-olm-deployment -type f`
@@ -27,7 +32,7 @@ sed -i  "s/@sha256:74036811bc5d6cc1a136d8cc6d5577db67f29ba95eba02fbf0c3a8d2357dc
 grep -rh image: ./my-olm-deployment  | sort | uniq | awk '{print $2}'
 sed -i  "s/quay.io\/coreos\//\$\{registry\}\/\$\{namespace\}\//g" `find ./my-olm-deployment -type f`
 sed -i  "s/gcr.io\/kubernetes-helm\/.*$/\$\{registry\}\/\$\{namespace\}\/tiller:\$\{tag\}/g" `find ./my-olm-deployment -type f`
-sed -i  "s/namespace: local.*$/namespace: \$\{kube_system\}/g" `find ./my-olm-deployment -type f`
+sed -i  "s/kube-system/\$\{kube_system\}/g" `find ./my-olm-deployment -type f`
 mkdir -p ../../resources/addons/olm
 cp ./my-olm-deployment/templates/* ../../resources/addons/olm/
 

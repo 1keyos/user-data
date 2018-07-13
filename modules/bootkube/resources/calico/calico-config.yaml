@@ -19,6 +19,8 @@ data:
           "nodename": "__KUBERNETES_NODE_NAME__",
           "ipam": {
             "type": "calico-ipam",
+            "ipv6_pools": ["2001:db8::1/120"],
+            "ipv4_pools": ["10.0.0.0/24", "20.0.0.0/16"],
             "assign_ipv6": "true",
             "assign_ipv4": "true"
           },

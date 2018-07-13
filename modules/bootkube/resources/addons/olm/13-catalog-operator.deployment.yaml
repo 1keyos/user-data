@@ -26,9 +26,9 @@ spec:
           command:
           - /bin/catalog
           - -watchedNamespaces
-          - local
+          - ${kube_system}
           - '-namespace'
-          - local
+          - ${kube_system}
           - '-debug'
           image: ${registry}/${namespace}/catalog:master-251aa80a
           imagePullPolicy: IfNotPresent

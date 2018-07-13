@@ -9,7 +9,7 @@ items:
 
 # TODO: if this is just for namespace lifecycle admission, move to a generic role
 # the role for the apiserver 
-- apiVersion: 
+- apiVersion: rbac.authorization.k8s.io/v1 
   kind: ClusterRole
   metadata:
     name: "servicecatalog.k8s.io:apiserver"
@@ -26,7 +26,7 @@ items:
     resources: ["mutatingwebhookconfigurations"]
     verbs: ["get", "list", "watch"]
 # API-server service-account gets its own role
-- apiVersion: 
+- apiVersion: rbac.authorization.k8s.io/v1 
   kind: ClusterRoleBinding
   metadata:
     name: "servicecatalog.k8s.io:apiserver"
@@ -38,10 +38,10 @@ items:
   - apiGroup: ""
     kind: ServiceAccount
     name: "service-catalog-apiserver"
-    namespace: "${kube-system}"
+    namespace: "${kube_system}"
 # apiserver gets the auth-delegator role to delegate auth decisions to
 # the core apiserver
-- apiVersion: 
+- apiVersion: rbac.authorization.k8s.io/v1 
   kind: ClusterRoleBinding
   metadata:
     name: "servicecatalog.k8s.io:apiserver-auth-delegator"
@@ -53,11 +53,11 @@ items:
   - apiGroup: ""
     kind: ServiceAccount
     name: "service-catalog-apiserver"
-    namespace: "${kube-system}"
+    namespace: "${kube_system}"
 # apiserver gets the ability to read authentication. This allows it to
 # read the specific configmap that has the requestheader-* entries to
 # enable api aggregation
-- apiVersion: 
+- apiVersion: rbac.authorization.k8s.io/v1 
   kind: RoleBinding
   metadata:
     name: "servicecatalog.k8s.io:apiserver-authentication-reader"
@@ -70,14 +70,14 @@ items:
   - apiGroup: ""
     kind: ServiceAccount
     name: "service-catalog-apiserver"
-    namespace: "${kube-system}"
+    namespace: "${kube_system}"
 
 ### Controller-Manager ###
 
 # controller-manager role defines what access the service-catalog
 # controller-manager needs to manage the resources of the
 # service-catalog
-- apiVersion: 
+- apiVersion: rbac.authorization.k8s.io/v1 
   kind: ClusterRole
   metadata:
     name: "servicecatalog.k8s.io:controller-manager"
@@ -109,7 +109,7 @@ items:
     resources: ["clusterservicebrokers/status","clusterserviceclasses/status","clusterserviceplans/status","serviceinstances/status","serviceinstances/reference","servicebindings/status"]
     verbs:     ["update"]
 # give the controller-manager service account access to whats defined in its role.
-- apiVersion: 
+- apiVersion: rbac.authorization.k8s.io/v1 
   kind: ClusterRoleBinding
   metadata:
     name: "servicecatalog.k8s.io:controller-manager"
@@ -121,24 +121,24 @@ items:
   - apiGroup: ""
     kind: ServiceAccount
     name: "service-catalog-controller-manager"
-    namespace: "${kube-system}"
+    namespace: "${kube_system}"
 
 # This gives create/update access to configmaps
-- apiVersion: 
+- apiVersion: rbac.authorization.k8s.io/v1 
   kind: Role
   metadata:
     name: "servicecatalog.k8s.io:cluster-info-configmap"
-    namespace: "${kube-system}"
+    namespace: "${kube_system}"
   rules:
   - apiGroups:     [""]
     resources:     ["configmaps"]
     resourceNames: ["cluster-info"]
     verbs:         ["get","create","list","watch","update"]
-- apiVersion: 
+- apiVersion: rbac.authorization.k8s.io/v1 
   kind: RoleBinding
   metadata:
     name: service-catalog-controller-manager-cluster-info
-    namespace: "${kube-system}"
+    namespace: "${kube_system}"
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: Role
@@ -147,14 +147,14 @@ items:
   - apiGroup: ""
     kind: ServiceAccount
     name: "service-catalog-controller-manager"
-    namespace: "${kube-system}"
+    namespace: "${kube_system}"
 
 # This gives create/update access to configmaps in deployment namespace for leader election
-- apiVersion: 
+- apiVersion: rbac.authorization.k8s.io/v1 
   kind: Role
   metadata:
     name: "servicecatalog.k8s.io:leader-locking-controller-manager"
-    namespace: "${kube-system}"
+    namespace: "${kube_system}"
   rules:
   - apiGroups: [""]
     resources: ["configmaps"]
@@ -163,11 +163,11 @@ items:
     resources:     ["configmaps"]
     resourceNames: ["service-catalog-controller-manager"]
     verbs:         ["get","update"]
-- apiVersion: 
+- apiVersion: rbac.authorization.k8s.io/v1 
   kind: RoleBinding
   metadata:
     name: service-catalog-controller-manager-leader-election
-    namespace: "${kube-system}"
+    namespace: "${kube_system}"
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: Role
@@ -176,5 +176,5 @@ items:
   - apiGroup: ""
     kind: ServiceAccount
     name: "service-catalog-controller-manager"
-    namespace: "${kube-system}"
+    namespace: "${kube_system}"
 

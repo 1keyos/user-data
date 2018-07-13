@@ -4,6 +4,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: catalog-catalog-apiserver
+  namespace: ${kube_system}
   labels:
     app: catalog-catalog-apiserver
     chart: "catalog-0.1.23"

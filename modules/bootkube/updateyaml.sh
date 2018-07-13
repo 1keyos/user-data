@@ -45,10 +45,14 @@ sed -i  "s/token-id:.*$/token-id: \"\$\{token_id\}\"/g" `find ./asset/all -type 
 sed -i  "s/token-secret:.*$/token-secret: \"\$\{token_secret\}\"/g" `find ./asset/all -type f`
 sed -i  "s/name: bootstrap-token-.*$/name: bootstrap-token-\$\{token_id\}/g" `find ./asset/all -type f`
 sed -i  "s/https:\/\/127.0.0.1:2379/\$\{etcd_servers\}/g" `find ./asset/all -type f`
-sed -i "s/host-local/calico-ipam/g"  `find ./asset/all -type f`
+sed -i "s/\"type\": \"host-local\"/\"type\": \"calico-ipam\"/g"  `find ./asset/all -type f`
 sed -i "/usePodCidr/d"  `find ./asset/all -type f`
 sed -i "/\"type\": \"calico-ipam\"/a\            \"assign_ipv4\": \"true\""  `find ./asset/all -type f`
 sed -i "/\"type\": \"calico-ipam\"/a\            \"assign_ipv6\": \"true\","  `find ./asset/all -type f`
+sed -i "/\"type\": \"calico-ipam\"/a\            \"ipv4_pools\": [\"10.0.0.0/24\", \"20.0.0.0/16\"],"  `find ./asset/all -type f`
+sed -i "/\"type\": \"calico-ipam\"/a\            \"ipv6_pools\": [\"2001:db8::1/120\"],"  `find ./asset/all -type f`
+#sed -i "s/flannel,calico-ipam,/flannel,/g"  `find ./asset/all -type f`
+
 mkdir -p resources/calico
 mv  asset/all/manifests/calico* resources/calico/
 mkdir -p   resources/flannel/

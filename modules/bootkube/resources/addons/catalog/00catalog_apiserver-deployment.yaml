@@ -4,6 +4,7 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: catalog-catalog-apiserver
+  namespace: ${kube_system}
   labels:
     app: catalog-catalog-apiserver
     chart: "catalog-0.1.23"
@@ -27,7 +28,7 @@ spec:
       serviceAccountName: "service-catalog-apiserver"
       containers:
       - name: apiserver
-        image: ${registry}/${namespace}/service-catalog:${tag}service-catalog:v0.1.23
+        image: ${registry}/${namespace}/service-catalog:${tag}
         imagePullPolicy: Always
         resources:
           requests:
@@ -49,6 +50,7 @@ spec:
         - http://localhost:2379
         - -v
         - "10"
+        - --requestheader-client-ca-file=/var/run/kubernetes-service-catalog/requestheader-ca.crt
         ports:
         - containerPort: 8443
         volumeMounts:
@@ -76,7 +78,7 @@ spec:
           successThreshold: 1
           timeoutSeconds: 2
       - name: etcd
-        image: ${registry}/${namespace}/etcd:${tag}etcd:latest
+        image: ${registry}/${namespace}/coreos-etcd:${tag}
         imagePullPolicy: Always
         resources:
           requests:
@@ -127,5 +129,7 @@ spec:
             path: apiserver.crt
           - key: tls.key
             path: apiserver.key
+          - key: requestheader-ca.crt
+            path: requestheader-ca.crt
       - name: etcd-data-dir
         emptyDir: {}

@@ -2,5 +2,5 @@
 terraform init
 terraform get --update
 terraform plan
-terraform apply
+echo yes | terraform apply
 

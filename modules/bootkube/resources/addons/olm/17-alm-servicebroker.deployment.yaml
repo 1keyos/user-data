@@ -27,7 +27,7 @@ spec:
           command:
           - /bin/servicebroker
           - '-debug'
-          image: ${registry}/${namespace}/olm-service-broker:master-251aa80a
+          image: ${registry}/${namespace}/alm-service-broker:master-251aa80a
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
