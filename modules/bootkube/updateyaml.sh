@@ -52,7 +52,7 @@ sed -i "/\"type\": \"calico-ipam\"/a\            \"assign_ipv6\": \"true\","  `f
 sed -i "/\"type\": \"calico-ipam\"/a\            \"ipv4_pools\": [\"10.0.0.0/24\", \"20.0.0.0/16\"],"  `find ./asset/all -type f`
 sed -i "/\"type\": \"calico-ipam\"/a\            \"ipv6_pools\": [\"2001:db8::1/120\"],"  `find ./asset/all -type f`
 #sed -i "s/flannel,calico-ipam,/flannel,/g"  `find ./asset/all -type f`
-
+sed -i "/- --proxy-mode=iptables/a\        - --conntrack-max-per-core=0"  `find ./asset/all -type f`
 mkdir -p resources/calico
 mv  asset/all/manifests/calico* resources/calico/
 mkdir -p   resources/flannel/
@@ -67,6 +67,7 @@ cp resources/auth/kubeconfig-kubelet resources/auth/nodekubeconfig-kubelet
 cp resources/auth/kubeconfig resources/auth/masterkubeconfig
 sed -i "s/127.0.0.1/\$\{ha_kube_ip\}/g" resources/auth/nodekubeconfig-kubelet
 sed -i "s/127.0.0.1/\$\{ha_kube_ip\}/g" resources/auth/kubeconfig
+sed -i "s/127.0.0.1/\$\{ha_kube_ip\}/g" resources/manifests/kubeconfig-in-cluster.yaml
 
 
 
