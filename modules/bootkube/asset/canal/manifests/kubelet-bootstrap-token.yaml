@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: bootstrap-token-a382se
+  name: bootstrap-token-e0ujy1
   namespace: kube-system
 type: bootstrap.kubernetes.io/token
 stringData:
-  token-id: "a382se"
-  token-secret: "x4igb38yrviqfnh3"
+  token-id: "e0ujy1"
+  token-secret: "p7ccj2qhxxmbkwcq"
   usage-bootstrap-authentication: "true"

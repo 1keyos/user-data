@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: calico-config
+  namespace: kube-system
+data:
+  # Disable Typha for now.
+  typha_service_name: "none"
+  calico_backend: "bird"
+  etcd_endpoints: "http://127.0.0.1:2379"
+  etcd_ca: "/etc/kubernetes/secrets/etcd-client-ca.crt"
+  etcd_cert: "/etc/kubernetes/secrets/etcd-client.crt" # "/calico-secrets/etcd-cert"
+  etcd_key: "/etc/kubernetes/secrets/etcd-client.key"  # "/calico-secrets/etcd-key"
+
+  # The CNI network configuration to install on each node.
+  cni_network_config: |-
+    {
+      "name": "k8s-pod-network",
+      "cniVersion": "0.3.1",
+      "plugins": [
+        {
+          "type": "calico",
+          "log_level": "info",
+          "etcd_endpoints": "${endpoints}",
+          "etcd_key_file": "${asset_dir}/tls/etcd-client.key",
+          "etcd_cert_file": "${asset_dir}/tls/etcd-client.crt",
+          "etcd_ca_cert_file": "${asset_dir}/tls/etcd-client-ca.crt",
+          "nodename": "__KUBERNETES_NODE_NAME__",
+          "mtu": ${network_mtu},
+          "ipam": {
+             "type": "calico-ipam",
+             "assign_ipv4": "true",
+             "assign_ipv6": "false",
+             "ipv4_pools": ["10.2.0.0/16"],
+             "ipv6_pools": ["fd20::0/112"]
+          },
+          "policy": {
+            "type": "k8s"
+          },
+          "kubernetes": {
+            "kubeconfig": "__KUBECONFIG_FILEPATH__"
+          }
+        },
+        {
+          "type": "portmap",
+          "snat": true,
+          "capabilities": {"portMappings": true}
+        }
+      ]
+    }

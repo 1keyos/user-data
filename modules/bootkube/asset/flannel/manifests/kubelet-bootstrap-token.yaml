@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: bootstrap-token-1wc2dn
+  name: bootstrap-token-jn6zy6
   namespace: kube-system
 type: bootstrap.kubernetes.io/token
 stringData:
-  token-id: "1wc2dn"
-  token-secret: "4wfc88fss80za2st"
+  token-id: "jn6zy6"
+  token-secret: "q3pixmr0v23x795v"
   usage-bootstrap-authentication: "true"

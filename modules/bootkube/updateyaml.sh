@@ -47,10 +47,22 @@ sed -i  "s/name: bootstrap-token-.*$/name: bootstrap-token-\$\{token_id\}/g" `fi
 sed -i  "s/https:\/\/127.0.0.1:2379/\$\{etcd_servers\}/g" `find ./asset/all -type f`
 sed -i "s/\"type\": \"host-local\"/\"type\": \"calico-ipam\"/g"  `find ./asset/all -type f`
 sed -i "/usePodCidr/d"  `find ./asset/all -type f`
+sed -i "/SKIP_CNI_BINARIES/d" `find ./asset/all -type f`
+sed -i "/value: bridge/d" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/{n;s/.*/              value: \"true\"/g}" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\            - name: CALICO_IPV6POOL_CIDR" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\              value: \"fd20::0/112\"" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\            - name: CALICO_IPV6POOL_IPIP" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\              value: \"Always\"" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\            - name: IP6" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\              value: \"autodetect\"" `find ./asset/all -type f`
+#sed -i "/name: IP/{n;s/.*/              value: \"autodetect\"/g}" `find ./asset/all -type f`
+#sed -i "/- name: CALICO_IPV4POOL_IPIP/{n;d}" `find ./asset/all -type f`
+#sed -i "/- name: CALICO_IPV4POOL_IPIP/d" `find ./asset/all -type f`
 sed -i "/\"type\": \"calico-ipam\"/a\            \"assign_ipv4\": \"true\""  `find ./asset/all -type f`
-sed -i "/\"type\": \"calico-ipam\"/a\            \"assign_ipv6\": \"true\","  `find ./asset/all -type f`
-sed -i "/\"type\": \"calico-ipam\"/a\            \"ipv4_pools\": [\"10.0.0.0/24\", \"20.0.0.0/16\"],"  `find ./asset/all -type f`
-sed -i "/\"type\": \"calico-ipam\"/a\            \"ipv6_pools\": [\"2001:db8::1/120\"],"  `find ./asset/all -type f`
+#sed -i "/\"type\": \"calico-ipam\"/a\            \"assign_ipv6\": \"true\","  `find ./asset/all -type f`
+sed -i "/\"type\": \"calico-ipam\"/a\            \"ipv4_pools\": [\"10.2.0.0/16\"],"  `find ./asset/all -type f`
+#sed -i "/\"type\": \"calico-ipam\"/a\            \"ipv6_pools\": [\"fd20::0/112\"],"  `find ./asset/all -type f`
 #sed -i "s/flannel,calico-ipam,/flannel,/g"  `find ./asset/all -type f`
 sed -i "/- --proxy-mode=iptables/a\        - --conntrack-max-per-core=0"  `find ./asset/all -type f`
 mkdir -p resources/calico
