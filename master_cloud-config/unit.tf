@@ -94,6 +94,15 @@ networking = "${var.networking}"
 
 }
 
+module "service_helm" {
+  source = "../modules/unit_helm"
+  registry="${var.registry}"
+  namespace="${var.namespace}"
+  tag="${var.tag}"
+}
+
+
+
 module "service_settimezone" {
   source = "../modules/unit_settimezone"
 }
