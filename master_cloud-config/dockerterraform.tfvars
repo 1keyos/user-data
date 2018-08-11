@@ -15,4 +15,4 @@ etcd_servers = ["172.100.0.8"]
 api_servers  = ["172.100.0.8"]
 ha_kube_ip   ="172.100.0.8"
 discovery_ip ="172.100.0.8"
-networking =["flannel"]
+networking =["calico"]

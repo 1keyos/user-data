@@ -1,0 +1,13 @@
+[Unit]
+Description=Bootstrap a Kubernetes cluster
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/mkdir -p ${asset_dir}/
+ExecStartPre=/bin/mkdir -p /etc/kubernetes
+RemainAfterExit=true
+WorkingDirectory=/opt/helm
+User=root
+Group=root
+
+ExecStart=/usr/bin/bash /opt/helm/helm.sh

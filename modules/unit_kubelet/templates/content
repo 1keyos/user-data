@@ -8,15 +8,20 @@ Environment="KUBELET_IMAGE_URL=  docker://${registry}/${namespace}/hyperkube"
 Environment=KUBELET_IMAGE_TAG=${tag}
 Environment="RKT_RUN_ARGS=--uuid-file-save=/var/cache/kubelet-pod.uuid \
           --volume var-lib-cni,kind=host,source=/var/lib/cni \
+          --volume asset-dir,kind=host,source=${asset_dir} \
           --volume var-lib-kubelet,kind=host,source=/var/lib/kubelet \
+          --volume var-lib-calico,kind=host,source=/var/lib/calico \
           --volume opt-cni-bin,kind=host,source=/opt/cni/bin \
           --volume var-log,kind=host,source=/var/log \
           --mount volume=var-log,target=/var/log \
+          --mount volume=asset-dir,target=${asset_dir} \
           --mount volume=var-lib-cni,target=/var/lib/cni \
           --mount volume=var-lib-kubelet,target=/var/lib/kubelet \
+          --mount volume=var-lib-calico,target=/var/lib/calico \
           --mount volume=opt-cni-bin,target=/opt/cni/bin \
           --insecure-options=all"
  ExecStartPre=/bin/mkdir -p /opt/cni/bin
+# ExecStartPre=/sbin/sysctl -w net.ipv6.conf.all.forwarding=1
  ExecStartPre=/bin/mkdir -p /etc/kubernetes/bootstrap-secrets
  ExecStartPre=/bin/mkdir -p /etc/kubernetes/manifests
  ExecStartPre=/bin/mkdir -p /etc/kubernetes/cni/net.d
@@ -26,6 +31,10 @@ Environment="RKT_RUN_ARGS=--uuid-file-save=/var/cache/kubelet-pod.uuid \
  ExecStartPre=/bin/cp  ${asset_dir}/tls/ca.crt  /etc/kubernetes/ca.crt
  ExecStartPre=/bin/cp  ${asset_dir}/auth/kubeconfig-kubelet  /etc/kubernetes/kubeconfig
  ExecStartPre=/bin/cp  ${asset_dir}/auth/kubeconfig  /etc/kubernetes/kubeconfig-admin
+ ExecStartPre=/bin/mkdir -p /var/lib/kubelet
+ ExecStartPre=/bin/mount -o bind /var/lib/kubelet /var/lib/kubelet
+ ExecStartPre=/bin/mount  --make-rslave /var/lib/kubelet
+ ExecStartPre=/bin/mkdir -p /var/lib/calico
  ExecStartPre=/bin/mkdir -p /var/lib/kubelet/pki
  ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/cache/kubelet-pod.uuid
  ExecStart=/usr/lib/coreos/kubelet-wrapper \
