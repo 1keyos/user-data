@@ -14,5 +14,7 @@ etcd_servers = ["117.25.155.104"]
 api_servers  = ["117.25.155.104"]
 ha_kube_ip   ="117.25.155.104"
 discovery_ip ="117.25.155.104"
+networking =["flannel"]
+
 
 

@@ -2,6 +2,8 @@ data "template_file" "content" {
   template = "${file("${path.module}/templates/content")}"
 
   vars = {
+    asset_dir="${var.asset_dir}"
+
   }
 }
 data  "template_file" "bootkubesh" {
@@ -9,6 +11,7 @@ data  "template_file" "bootkubesh" {
 
   vars = {
     bootkube_image = "${var.registry}/${var.namespace}/kubernetes-bootkube:${var.tag}"
+    asset_dir="${var.asset_dir}"
   }
 }
 

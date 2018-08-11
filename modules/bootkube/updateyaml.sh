@@ -35,8 +35,8 @@ sed -i  "s/ca.crt:.*$/ca.crt: \$\{ca_cert\}/g" `find ./asset/all -type f`
 sed -i  "s/etcd-client-ca.crt:.*$/etcd-client-ca.crt: \$\{etcd_ca_cert\}/g" `find ./asset/all -type f`
 sed -i  "s/etcd-client.crt:.*$/etcd-client.crt: \$\{etcd_client_cert\}/g" `find ./asset/all -type f`
 sed -i  "s/etcd-client.key:.*$/etcd-client.key: \$\{etcd_client_key\}/g" `find ./asset/all -type f`
-sed -i  "s/ca.key:.*$/ca.key: \$\{etcd_client_cert\}/g" `find ./asset/all -type f`
-sed -i  "s/service-account.key:.*$/service-account.key: \$\{etcd_client_key\}/g" `find ./asset/all -type f`
+sed -i  "s/ca.key:.*$/ca.key: \$\{ca_key\}/g" `find ./asset/all -type f`
+sed -i  "s/service-account.key:.*$/service-account.key: \$\{serviceaccount_key}/g" `find ./asset/all -type f`
 sed -i  "s/certificate-authority-data:.*$/certificate-authority-data: \$\{ca_cert\}/g" `find ./asset/all -type f`
 sed -i  "s/client-certificate-data:.*$/client-certificate-data: \$\{kubelet_cert\}/g" `find ./asset/all -type f`
 sed -i  "s/client-key-data:.*$/client-key-data: \$\{kubelet_key\}/g" `find ./asset/all -type f`
@@ -45,7 +45,26 @@ sed -i  "s/token-id:.*$/token-id: \"\$\{token_id\}\"/g" `find ./asset/all -type 
 sed -i  "s/token-secret:.*$/token-secret: \"\$\{token_secret\}\"/g" `find ./asset/all -type f`
 sed -i  "s/name: bootstrap-token-.*$/name: bootstrap-token-\$\{token_id\}/g" `find ./asset/all -type f`
 sed -i  "s/https:\/\/127.0.0.1:2379/\$\{etcd_servers\}/g" `find ./asset/all -type f`
-
+sed -i "s/\"type\": \"host-local\"/\"type\": \"calico-ipam\"/g"  `find ./asset/all -type f`
+sed -i "/usePodCidr/d"  `find ./asset/all -type f`
+sed -i "/SKIP_CNI_BINARIES/d" `find ./asset/all -type f`
+sed -i "/value: bridge/d" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/{n;s/.*/              value: \"true\"/g}" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\            - name: CALICO_IPV6POOL_CIDR" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\              value: \"fd20::0/112\"" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\            - name: CALICO_IPV6POOL_IPIP" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\              value: \"Always\"" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\            - name: IP6" `find ./asset/all -type f`
+#sed -i "/name: FELIX_IPV6SUPPORT/i\              value: \"autodetect\"" `find ./asset/all -type f`
+#sed -i "/name: IP/{n;s/.*/              value: \"autodetect\"/g}" `find ./asset/all -type f`
+#sed -i "/- name: CALICO_IPV4POOL_IPIP/{n;d}" `find ./asset/all -type f`
+#sed -i "/- name: CALICO_IPV4POOL_IPIP/d" `find ./asset/all -type f`
+sed -i "/\"type\": \"calico-ipam\"/a\            \"assign_ipv4\": \"true\""  `find ./asset/all -type f`
+#sed -i "/\"type\": \"calico-ipam\"/a\            \"assign_ipv6\": \"true\","  `find ./asset/all -type f`
+sed -i "/\"type\": \"calico-ipam\"/a\            \"ipv4_pools\": [\"10.2.0.0/16\"],"  `find ./asset/all -type f`
+#sed -i "/\"type\": \"calico-ipam\"/a\            \"ipv6_pools\": [\"fd20::0/112\"],"  `find ./asset/all -type f`
+#sed -i "s/flannel,calico-ipam,/flannel,/g"  `find ./asset/all -type f`
+sed -i "/- --proxy-mode=iptables/a\        - --conntrack-max-per-core=0"  `find ./asset/all -type f`
 mkdir -p resources/calico
 mv  asset/all/manifests/calico* resources/calico/
 mkdir -p   resources/flannel/
@@ -60,6 +79,7 @@ cp resources/auth/kubeconfig-kubelet resources/auth/nodekubeconfig-kubelet
 cp resources/auth/kubeconfig resources/auth/masterkubeconfig
 sed -i "s/127.0.0.1/\$\{ha_kube_ip\}/g" resources/auth/nodekubeconfig-kubelet
 sed -i "s/127.0.0.1/\$\{ha_kube_ip\}/g" resources/auth/kubeconfig
+sed -i "s/127.0.0.1/\$\{ha_kube_ip\}/g" resources/manifests/kubeconfig-in-cluster.yaml
 
 
 

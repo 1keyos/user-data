@@ -48,6 +48,8 @@ data "template_file" "kubeconfig-kubelet" {
     token_id     = "${var.token_id}"
     token_secret = "${var.token_secret}"
     api_port    = "${var.api_port}"
+    ha_kube_ip   = "${var.ha_kube_ip}"
+
 
   }
 }

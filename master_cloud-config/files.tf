@@ -176,7 +176,7 @@ module "file-render" {
 module "file-terraform" {
   source = "../modules/cloud-config_file"
 
-  path    = "/assets/terraform.tfvars"
+  path    = "/${var.asset_dir}/terraform.tfvars"
   permissions = "0700"
   owner   = "root:root"
   content = "${module.service_render.terraformfile}"

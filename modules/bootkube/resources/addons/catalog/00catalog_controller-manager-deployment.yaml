@@ -1,0 +1,99 @@
+##---
+# Source: catalog/templates/controller-manager-deployment.yaml
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: catalog-catalog-controller-manager
+  namespace: ${kube_system}
+  labels:
+    app: catalog-catalog
+    chart: "catalog-0.1.23"
+    release: "catalog"
+    heritage: "Tiller"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-catalog-controller-manager
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "false"
+      
+      labels:
+        app: catalog-catalog-controller-manager
+        chart: "catalog-0.1.23"
+        release: "catalog"
+        heritage: "Tiller"
+    spec:
+      serviceAccountName: "service-catalog-controller-manager"
+      containers:
+      - name: controller-manager
+        image: ${registry}/${namespace}/service-catalog:${tag}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 20Mi
+          limits:
+            cpu: 100m
+            memory: 30Mi
+        env:
+        - name: K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        args:
+        - controller-manager
+        - --secure-port
+        - "8444"
+        - "--cluster-id-configmap-namespace=${kube_system}"
+        
+        - "--leader-elect=false"
+        
+        
+        
+        - -v
+        - "10"
+        - --resync-interval
+        - 5m
+        - --broker-relist-interval
+        - 24h
+        ports:
+        - containerPort: 8444
+        volumeMounts:
+        - name: service-catalog-cert
+          mountPath: /var/run/kubernetes-service-catalog
+          readOnly: true
+        readinessProbe:
+          httpGet:
+            port: 8444
+            path: /healthz
+            scheme: HTTPS
+          failureThreshold: 1
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            port: 8444
+            path: /healthz
+            scheme: HTTPS
+          failureThreshold: 3
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+      
+      volumes:
+      - name: service-catalog-cert
+        secret:
+          secretName: catalog-catalog-apiserver-cert
+          items:
+          - key: tls.crt
+            path: apiserver.crt
+          - key: tls.key
+            path: apiserver.key
+          - key: requestheader-ca.crt
+            path: requestheader-ca.crt

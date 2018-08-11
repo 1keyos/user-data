@@ -1,0 +1,46 @@
+##---
+# Source: olm/templates/13-catalog-operator.deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: catalog-operator
+  namespace: ${kube_system}
+  labels:
+    app: catalog-operator
+    tectonic-operators.coreos.com/managed-by: tectonic-x-operator
+spec:
+  strategy:
+    type: RollingUpdate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-operator
+  template:
+    metadata:
+      labels:
+        app: catalog-operator
+    spec:
+      serviceAccountName: alm-operator-serviceaccount
+      containers:
+        - name: catalog-operator
+          command:
+          - /bin/catalog
+          - -watchedNamespaces
+          - ${kube_system}
+          - '-namespace'
+          - ${kube_system}
+          - '-debug'
+          image: ${registry}/${namespace}/catalog:master-251aa80a
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+      imagePullSecrets:
+        - name: coreos-pull-secret

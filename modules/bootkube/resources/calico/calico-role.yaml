@@ -4,26 +4,72 @@ metadata:
   name: calico-node
 rules:
   - apiGroups: [""]
-    resources: ["namespaces"]
-    verbs: ["get", "list", "watch"]
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
   - apiGroups: [""]
-    resources: ["pods/status"]
-    verbs: ["update"]
+    resources:
+      - pods/status
+    verbs:
+      - update
   - apiGroups: [""]
-    resources: ["pods"]
-    verbs: ["get", "list", "watch", "patch"]
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
   - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get"]
+    resources:
+      - services
+    verbs:
+      - get
   - apiGroups: [""]
-    resources: ["endpoints"]
-    verbs: ["get"]
+    resources:
+      - endpoints
+    verbs:
+      - get
   - apiGroups: [""]
-    resources: ["nodes"]
-    verbs: ["get", "list", "update", "watch"]
+    resources:
+      - nodes
+    verbs:
+      - get
+      - list
+      - update
+      - watch
   - apiGroups: ["extensions"]
-    resources: ["networkpolicies"]
-    verbs: ["get", "list", "watch"]
+    resources:
+      - networkpolicies
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups: ["networking.k8s.io"]
+    resources:
+      - networkpolicies
+    verbs:
+      - watch
+      - list
   - apiGroups: ["crd.projectcalico.org"]
-    resources: ["globalfelixconfigs", "felixconfigurations", "bgppeers", "globalbgpconfigs", "bgpconfigurations", "ippools", "globalnetworkpolicies", "globalnetworksets", "networkpolicies", "clusterinformations"]
-    verbs: ["create", "get", "list", "update", "watch"]
+    resources:
+      - globalfelixconfigs
+      - felixconfigurations
+      - bgppeers
+      - globalbgpconfigs
+      - bgpconfigurations
+      - ippools
+      - globalnetworkpolicies
+      - globalnetworksets
+      - networkpolicies
+      - clusterinformations
+      - hostendpoints
+    verbs:
+      - create
+      - get
+      - list
+      - update
+      - watch

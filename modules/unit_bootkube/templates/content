@@ -5,7 +5,7 @@ Wants=kubelet.service render.service
 After=kubelet.service render.service
 [Service]
 Type=oneshot
-ExecStartPre=/bin/mkdir -p /assets
+ExecStartPre=/bin/mkdir -p ${asset_dir}
 RemainAfterExit=true
 WorkingDirectory=/opt/bootkube
 User=root

@@ -2,13 +2,17 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: calico-node
-  namespace: ${kube_system}
+  namespace: kube-system
   labels:
     k8s-app: calico-node
 spec:
   selector:
     matchLabels:
       k8s-app: calico-node
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   template:
     metadata:
       labels:
@@ -25,32 +29,71 @@ spec:
         - name: calico-node
           image: ${registry}/${namespace}/calico-node:${tag}
           env:
-            - name: DATASTORE_TYPE
-              value: "kubernetes"
+            # Use Kubernetes API as the backing datastore.
+            - name: ETCD_ENDPOINTS
+              value: ${endpoints}
+            - name: ETCD_CA_CERT_FILE
+              value: /etc/kubernetes/secrets/etcd-client-ca.crt
+            - name: ETCD_CERT_FILE
+              value: /etc/kubernetes/secrets/etcd-client.crt
+            - name: ETCD_KEY_FILE
+              value: /etc/kubernetes/secrets/etcd-client.key
+            # Enable felix info logging.
             - name: FELIX_LOGSEVERITYSCREEN
               value: "info"
-            - name: CALICO_NETWORKING_BACKEND
-              value: "none"
+            # Cluster type to identify the deployment type
             - name: CLUSTER_TYPE
-              value: "bootkube,canal"
+              value: "k8s,bgp"
+            # Disable file logging so `kubectl logs` works.
+            # Choose the backend to use.
+            - name: CALICO_NETWORKING_BACKEND
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: calico_backend
             - name: CALICO_DISABLE_FILE_LOGGING
               value: "true"
+            # Set Felix endpoint to host default action to ACCEPT.
             - name: FELIX_DEFAULTENDPOINTTOHOSTACTION
               value: "ACCEPT"
+            # Disable IPV6 on Kubernetes.
             - name: FELIX_IPV6SUPPORT
               value: "false"
+            # Set MTU for tunnel device used if ipip is enabled
+            - name: FELIX_IPINIPMTU
+              value: "${network_mtu}"
+            # Wait for the datastore.
             - name: WAIT_FOR_DATASTORE
               value: "true"
+            # The Calico IPv4 pool CIDR (should match `--cluster-cidr`).
             - name: CALICO_IPV4POOL_CIDR
               value: "${pod_cidr}"
+            # Enable IPIP
             - name: CALICO_IPV4POOL_IPIP
               value: "Always"
+            # Enable IP-in-IP within Felix.
+            - name: FELIX_IPINIPENABLED
+              value: "true"
+            # Typha support: controlled by the ConfigMap.
+            - name: FELIX_TYPHAK8SSERVICENAME
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: typha_service_name
+            # Set node name based on k8s nodeName.
             - name: NODENAME
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+            # Auto-detect the BGP IP address.
             - name: IP
-              value: ""
+              value: "autodetect"
+            - name: IP6
+              value: "autodetect"
+            - name: CALICO_IPV6POOL_CIDR
+              value: "fd20::0/112"
+            - name: IP_AUTODETECTION_METHOD
+              value: "${network_ip_autodetection_method}"
             - name: FELIX_HEALTHENABLED
               value: "true"
           securityContext:
@@ -77,25 +120,34 @@ spec:
             - mountPath: /var/run/calico
               name: var-run-calico
               readOnly: false
+            - mountPath: /var/lib/calico
+              name: var-lib-calico
+              readOnly: false
+            - mountPath: /etc/kubernetes/secrets
+              name: secrets
+              readOnly: true
+
+        # Install Calico CNI binaries and CNI network config file on nodes
         - name: install-cni
           image: ${registry}/${namespace}/calico-cni:${tag}
           command: ["/install-cni.sh"]
           env:
+            # Name of the CNI config file to create on each node.
             - name: CNI_CONF_NAME
               value: "10-calico.conflist"
+            # Contents of the CNI config to create on each node.
             - name: CNI_NETWORK_CONFIG
               valueFrom:
                 configMapKeyRef:
                   name: calico-config
                   key: cni_network_config
-            - name: CNI_NET_DIR
-              value: "/etc/kubernetes/cni/net.d"
+            # Set node name based on k8s nodeName
             - name: KUBERNETES_NODE_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-            - name: SKIP_CNI_BINARIES
-              value: bridge,cnitool,dhcp,flannel,host-local,ipvlan,loopback,macvlan,noop,portmap,ptp,tuning
+            - name: CNI_NET_DIR
+              value: "/etc/kubernetes/cni/net.d"
           volumeMounts:
             - mountPath: /host/opt/cni/bin
               name: cni-bin-dir
@@ -103,19 +155,24 @@ spec:
               name: cni-net-dir
       terminationGracePeriodSeconds: 0
       volumes:
+        # Used by calico/node
         - name: lib-modules
           hostPath:
             path: /lib/modules
         - name: var-run-calico
           hostPath:
             path: /var/run/calico
+        - name: var-lib-calico
+          hostPath:
+            path: /var/lib/calico
+        # Used by install-cni
         - name: cni-bin-dir
           hostPath:
             path: /opt/cni/bin
         - name: cni-net-dir
           hostPath:
             path: /etc/kubernetes/cni/net.d
-  updateStrategy:
-    rollingUpdate:
-      maxUnavailable: 1
-    type: RollingUpdate
+        - name: secrets
+          secret:
+            secretName: kube-apiserver
+
