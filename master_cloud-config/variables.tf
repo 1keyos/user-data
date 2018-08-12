@@ -137,4 +137,13 @@ variable "networking" {
   default     = ["flannel","calico"]
 }
 
-
+variable "IPV4" {
+  default     = true
+}
+variable "IPV6" {
+  default  = false
+}
+variable "IPV6-cidr" {
+  type = "string"
+  default =""
+}

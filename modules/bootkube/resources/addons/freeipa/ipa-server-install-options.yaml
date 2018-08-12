@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ipa-server-install-options
+  namespace: kube-system
+data:
+  ipa-server-install-options: |
+    --allow-zone-overlap
+    --setup-kra
+    --ds-password=12345632
+    --admin-password=12345632
+    --setup-dns
+    --domain=KUBE.LOCAL
+    --realm=KUBE.LOCAL
+    --forwarder=10.3.0.10
+    --reverse-zone=2.10.in-addr.arpa.
+    --unattended
+    --no-ntp
+    --no_hbac_allow
+
