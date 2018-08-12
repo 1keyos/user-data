@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ipa-server-install-options
+  namespace: kube-system
+data:
+  ipa-server-install-options: |
+    --forwarder=202.101.103.55
+    --allow-zone-overlap
+    --reverse-zone=10.10.0.in-addr.arpa.
+    --setup-dns
+    --ds-password=12345632
+    --admin-password=12345632
+    --no-ntp
+    --no-host-dns
+    --no_hbac_allow
+    --hostname=freeipa.kube.local
+    --domain=KUBE.LOCAL
+    --realm=KUBE.LOCAL
+    --unattended
+  hostname: |
+    freeipa.kube.local

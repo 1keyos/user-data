@@ -127,6 +127,7 @@ module "bootkube" {
   source = "../modules/bootkube"
   ha_kube_ip = "${var.ha_kube_ip}"
   cluster_name = "${var.cluster_name}"
+  cluster_domain_suffix = "${var.k8s-domain}"
   api_servers = ["node1.example.com"]
   etcd_servers = ["node1.example.com"]
   ip_etcd_servers = "${var.ip_etcd_servers}"

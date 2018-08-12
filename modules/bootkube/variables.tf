@@ -171,4 +171,15 @@ variable  "etcdport" {
    type = "string"
    default = "4001"
 }
+variable "IPV4" {
+  default     = "true"
+}
+variable "IPV6" {
+  default  = "true"
+}
+variable "ipv6_pod_cidr" {
+  type = "string"
+  default = "fd20::0/112"
+}
+
 

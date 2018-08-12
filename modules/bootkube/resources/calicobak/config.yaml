@@ -6,12 +6,9 @@ metadata:
 data:
   # Disable Typha for now.
   typha_service_name: "none"
-  calico_backend: "bird"
   etcd_endpoints: "http://127.0.0.1:2379"
-  etcd_ca: "/etc/kubernetes/secrets/etcd-client-ca.crt"
-  etcd_cert: "/etc/kubernetes/secrets/etcd-client.crt" # "/calico-secrets/etcd-cert"
-  etcd_key: "/etc/kubernetes/secrets/etcd-client.key"  # "/calico-secrets/etcd-key"
-
+  # Configure the Calico backend to use.
+  calico_backend: "bird"
   # The CNI network configuration to install on each node.
   cni_network_config: |-
     {
@@ -31,8 +28,7 @@ data:
              "type": "calico-ipam",
              "assign_ipv4": "true",
              "assign_ipv6": "false",
-             "ipv4_pools": ["10.2.0.0/16"],
-             "ipv6_pools": ["fd20::0/112"]
+             "ipv4_pools": ["10.2.0.0/16"]
           },
           "policy": {
             "type": "k8s"
