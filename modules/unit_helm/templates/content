@@ -1,10 +1,15 @@
 [Unit]
 Description=Bootstrap a Kubernetes cluster
+ConditionPathExists=!/opt/helm/init_helm.done
+Wants=bootkube.service
+After=bootkube.service
+
 
 [Service]
 Type=oneshot
 ExecStartPre=/bin/mkdir -p ${asset_dir}/
 ExecStartPre=/bin/mkdir -p /etc/kubernetes
+ExecStartPost=/bin/touch /opt/helm/init_helm.done
 RemainAfterExit=true
 WorkingDirectory=/opt/helm
 User=root

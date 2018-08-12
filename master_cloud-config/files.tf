@@ -173,6 +173,15 @@ module "file-render" {
   owner   = "root:root"
   content = "${module.service_render.bootkubesh}"
 }
+module "file-helm" {
+  source = "../modules/cloud-config_file"
+
+  path    = "/opt/helm/helm.sh"
+  permissions = "0700"
+  owner   = "root:root"
+  content = "${module.service_helm.helmsh}"
+}
+
 module "file-terraform" {
   source = "../modules/cloud-config_file"
 
