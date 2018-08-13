@@ -138,15 +138,15 @@ module "bootkube" {
   networking = "${var.networking}"
 
 }
-#module "helm" {
-#  source = "../modules/helm"
-#  asset_dir = "${var.asset_dir}"
-#  registry = "${var.registry}"
-#  namespace = "${var.namespace}"
-#  tag = "${var.tag}"
+module "helm" {
+  source = "../modules/helm"
+  asset_dir = "${var.asset_dir}"
+  registry = "${var.registry}"
+  namespace = "${var.namespace}"
+  tag = "${var.tag}"
 
 
-#}
+}
 
 module "service_ceph-mds" {
   source = "../modules/unit_ceph-mds"
