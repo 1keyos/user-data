@@ -33,7 +33,7 @@ variable "generate_ssh_key" {
 }
 variable "reboot_strategy" {
   description = "CoreOS reboot strategy"
-  default     = "best-effort"
+  default     = "off"
 }
 
 variable "additional_units" {

@@ -7,8 +7,8 @@ EnvironmentFile=/etc/endpoints.conf
 ExecStartPre=/bin/mkdir -p /etc/kubernetes/
 ExecStartPre=/bin/mkdir -p /var/lib/etcd/
 ExecStart=/opt/bin/etcd-start 
+TimeoutStartSec=infinity
 ExecStartPost=/opt/bin/updateendpoints
 Restart=always
-RestartSec=10
 
 

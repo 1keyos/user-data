@@ -41,18 +41,6 @@ resource "tls_cert_request" "client" {
     organization = "etcd"
   }
 
-  ip_addresses = ["${concat(
-    var.ip_etcd_servers,
-    list(
-      "127.0.0.1",
-    ))}"]
-
-
-  dns_names = ["${concat(
-    var.etcd_servers,
-    list(
-      "localhost",
-    ))}"]
 }
 
 resource "tls_locally_signed_cert" "client" {
@@ -86,18 +74,6 @@ resource "tls_cert_request" "server" {
     organization = "etcd"
   }
 
-  ip_addresses = ["${concat(
-    var.ip_etcd_servers,
-    list(
-      "127.0.0.1",
-    ))}"]
-
-
-  dns_names = ["${concat(
-    var.etcd_servers,
-    list(
-      "localhost",
-    ))}"]
 }
 
 resource "tls_locally_signed_cert" "server" {
@@ -130,14 +106,7 @@ resource "tls_cert_request" "peer" {
     common_name  = "etcd-peer"
     organization = "etcd"
   }
-  ip_addresses = ["${concat(
-    var.ip_etcd_servers,
-    list(
-      "127.0.0.1",
-    ))}"]
 
-
-  dns_names = ["${var.etcd_servers}"]
 }
 
 resource "tls_locally_signed_cert" "peer" {

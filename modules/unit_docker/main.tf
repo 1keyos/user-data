@@ -6,8 +6,10 @@ data "template_file" "docker-opts" {
         list(
           "--log-opt max-size=50m",
           "--insecure-registry ${var.registry}",
-          "--log-opt max-file=5"
-        ),
+          "--log-opt max-file=5", 
+          "--selinux-enabled=true",
+          "--dns=180.76.76.76"
+         ),
         "${var.docker-opts}"
     ))}"
   }
